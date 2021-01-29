@@ -15,6 +15,8 @@ public class FPC : MonoBehaviour
     Vector2 Move;
     float MouseX;
     float MouseY;
+    public float rotateSpeed = 1.0F;
+
 
     void Awake()
     {
@@ -44,8 +46,19 @@ public class FPC : MonoBehaviour
     void Update()
     {
         float deltaTime = Time.deltaTime;
-        Vector3 newMove = new Vector3(Move.x * speed * deltaTime, 0f, Move.y * speed * deltaTime);
+
+        float angDeg = transform.localEulerAngles.y;
+        float angRad = angDeg * Mathf.PI / 180.0f;
+        float cos = Mathf.Cos(angRad);
+        float sin = Mathf.Sin(angRad);
+
+        Vector3 relFwd = Move.y * cos * Vector3.forward + Move.y * sin * Vector3.right;
+        Vector3 relRgt = Move.x * cos * Vector3.right + Move.x * -sin * Vector3.forward;
+        Vector3 moveDir = (relFwd + relRgt).normalized;
+        Vector3 newMove = speed * deltaTime * moveDir;
+
+        transform.Rotate(0, MouseX * rotateSpeed, 0);
+
         Controller.Move(newMove);
-        //cam.transform.Rotate(MouseX, MouseY, 0); // this doesnt work
     }
 }
