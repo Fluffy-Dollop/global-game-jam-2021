@@ -52,12 +52,12 @@ public class FPC : NetworkedBehaviour
         {
             float deltaTime = Time.deltaTime;
 
-        // handle rotation
+            // handle rotation
 
-        currentEulerAngles += new Vector3(-MouseY * rotateSpeed, MouseX * rotateSpeed, 0);
-        transform.eulerAngles = currentEulerAngles;
+            currentEulerAngles += new Vector3(-MouseY * rotateSpeed, MouseX * rotateSpeed, 0);
+            transform.eulerAngles = currentEulerAngles;
 
-        // handle translation (walking)
+            // handle translation (walking)
 
             float angDeg = transform.localEulerAngles.y;
             float angRad = angDeg * Mathf.PI / 180.0f;
