@@ -16,7 +16,7 @@ public class FPC : MonoBehaviour
     float MouseX;
     float MouseY;
     public float rotateSpeed = 1.0F;
-
+    Vector3 currentEulerAngles;
 
     void Awake()
     {
@@ -47,6 +47,13 @@ public class FPC : MonoBehaviour
     {
         float deltaTime = Time.deltaTime;
 
+        // handle rotation
+
+        currentEulerAngles += new Vector3(-MouseY * rotateSpeed, MouseX * rotateSpeed, 0);
+        transform.eulerAngles = currentEulerAngles;
+
+        // handle translation (walking)
+
         float angDeg = transform.localEulerAngles.y;
         float angRad = angDeg * Mathf.PI / 180.0f;
         float cos = Mathf.Cos(angRad);
@@ -56,8 +63,6 @@ public class FPC : MonoBehaviour
         Vector3 relRgt = Move.x * cos * Vector3.right + Move.x * -sin * Vector3.forward;
         Vector3 moveDir = (relFwd + relRgt).normalized;
         Vector3 newMove = speed * deltaTime * moveDir;
-
-        transform.Rotate(0, MouseX * rotateSpeed, 0);
 
         Controller.Move(newMove);
     }
