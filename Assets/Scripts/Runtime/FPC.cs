@@ -8,7 +8,6 @@ using MLAPI;
 // Fird Person Controller
 public class FPC : NetworkedBehaviour
 {
-    [SerializeField] Transform cam;
     [SerializeField] float speed = 10f;
     [SerializeField] float angularSpeed;
 
@@ -24,9 +23,15 @@ public class FPC : NetworkedBehaviour
     {
         Controller = GetComponent<CharacterController>();
         NetObj = GetComponent<NetworkedObject>();
+    }
 
-        Transform cameraXform = this.gameObject.transform.GetChild(0); // camera
-        cameraXform.position += Vector3.forward * -5.0f;
+    private void Start()
+    {
+        if (IsLocalPlayer)
+        {
+            GetComponentInChildren<Camera>().enabled = true;
+            GetComponentInChildren<AudioListener>().enabled = true;
+        }
     }
 
     public void OnMove(InputAction.CallbackContext context)
