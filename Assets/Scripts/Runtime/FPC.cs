@@ -59,13 +59,16 @@ public class FPC : NetworkedBehaviour
 
             // handle translation (walking)
 
+            // convert the angle to radian and compute sine and cosine values once
             float angDeg = transform.localEulerAngles.y;
             float angRad = angDeg * Mathf.PI / 180.0f;
             float cos = Mathf.Cos(angRad);
             float sin = Mathf.Sin(angRad);
 
-            Vector3 relFwd = Move.y * (cos * Vector3.forward + sin * Vector3.right);
-            Vector3 relRgt = Move.x * (cos * Vector3.right - sin * Vector3.forward);
+            // compute relative forward and right as weighted compositions of absolute forward and right
+            // how much to weigh by? Follow the sine/cosine curves as you turn!
+            Vector3 relFwd = Move.y * ( cos * Vector3.forward + sin * Vector3.right);
+            Vector3 relRgt = Move.x * (-sin * Vector3.forward + cos * Vector3.right);
             Vector3 moveDir = (relFwd + relRgt).normalized;
             Vector3 newMove = speed * deltaTime * moveDir;
 
