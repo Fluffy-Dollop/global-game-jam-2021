@@ -55,6 +55,7 @@ public class FPC : NetworkedBehaviour
             // handle rotation
 
             currentEulerAngles += new Vector3(-MouseY * rotateSpeed, MouseX * rotateSpeed, 0);
+            currentEulerAngles.x = Mathf.Clamp(currentEulerAngles.x, -90, 90);
             transform.eulerAngles = currentEulerAngles;
 
             // handle translation (walking)
