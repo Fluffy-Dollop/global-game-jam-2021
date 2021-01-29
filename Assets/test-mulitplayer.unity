@@ -323,7 +323,6 @@ GameObject:
   - component: {fileID: 1671530217}
   - component: {fileID: 1671530216}
   - component: {fileID: 1671530215}
-  - component: {fileID: 1671530214}
   m_Layer: 0
   m_Name: NetworkingManager
   m_TagString: Untagged
@@ -331,21 +330,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1671530214
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1671530213}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9e6c2a6a0e3294419ffa5a490983b6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isHost: 1
-  positionToSpawnAt: {x: 0, y: 0, z: 0}
-  rotationToSpawnWith: {x: 0, y: 0, z: 0, w: 1}
 --- !u!114 &1671530215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -366,7 +350,7 @@ MonoBehaviour:
   ServerWebsocketListenPort: 8887
   SupportWebsocket: 0
   Channels: []
-  UseMLAPIRelay: 1
+  UseMLAPIRelay: 0
   MLAPIRelayAddress: 184.72.104.138
   MLAPIRelayPort: 8888
 --- !u!114 &1671530216
@@ -401,7 +385,7 @@ MonoBehaviour:
     EventTickrate: 64
     MaxObjectUpdatesPerTick: -1
     ClientConnectionBufferTimeout: 10
-    ConnectionApproval: 1
+    ConnectionApproval: 0
     ConnectionData: 
     SecondsHistory: 5
     EnableTimeResync: 0
