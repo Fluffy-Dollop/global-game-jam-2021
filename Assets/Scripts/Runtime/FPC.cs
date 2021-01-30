@@ -132,76 +132,56 @@ public class FPC : NetworkedBehaviour
         Controller.Move(newMove);
     }
 
+    GameObject UpdateHand(GameObject itemInHand, GameObject itemInOtherHand)
+    {
+        var pickUpRange = 3.0f;
+
+        if (itemInHand)
+        {
+            // todo: use that item!
+
+            // for now: drop it
+            itemInHand.transform.parent = transform.parent;
+            itemInHand.GetComponent<ItemBehavior>().Drop();
+            itemInHand = null;
+        }
+        else
+        {
+            // try to pick up an item in this hand
+            GameObject found = gameManager.FindClosestItem(transform.position, pickUpRange, itemInOtherHand);
+            if (found)
+            {
+                // pick up this object in this hand
+                RequestOwnership(found);
+                found.transform.parent = transform;
+                itemInHand = found;
+                itemInHand.GetComponent<ItemBehavior>().PickUp();
+            }
+            else
+            {
+                // no object within range
+            }
+        }
+
+        return itemInHand;
+    }
+
     void PickUpItems()
     {
         // determine triggering
         bool leftItemTriggered = (LeftItemUsed > 0.0f) && (prevLeftItemUsed <= 0.0f);
         bool rightItemTriggered = (RightItemUsed > 0.0f) && (prevRightItemUsed <= 0.0f);
 
-        var pickUpRange = 3.0f;
-
         // if hit a left mouse click, then want to pick up object in left hand
         if (leftItemTriggered)
         {
-            if (leftHandItem)
-            {
-                // todo: use that item!
-
-                // for now: drop it
-                leftHandItem.transform.parent = transform.parent;
-                leftHandItem.GetComponent<ItemBehavior>().Drop();
-                leftHandItem = null;
-            }
-            else
-            {
-                // try to pick up an item in the left hand
-                // want to pick up object in left hand
-                GameObject found = gameManager.FindClosestItem(transform.position, pickUpRange, rightHandItem);
-                if (found)
-                {
-                    // pick up left object
-                    RequestOwnership(found);
-                    found.transform.parent = transform;
-                    leftHandItem = found;
-                    leftHandItem.GetComponent<ItemBehavior>().PickUp();
-                }
-                else
-                {
-                    // no object within range
-                }
-            }
+            leftHandItem = UpdateHand(leftHandItem, rightHandItem);
         }
 
         // if hit a right mouse click, then want to pick up object in right hand
         if (rightItemTriggered)
         {
-            if (rightHandItem)
-            {
-                // todo: use that item!
-
-                // for now: drop it
-                rightHandItem.transform.parent = transform.parent;
-                rightHandItem.GetComponent<ItemBehavior>().Drop();
-                rightHandItem = null;
-            }
-            else
-            {
-                // try to pick up an item in the right hand
-                // want to pick up object in right hand
-                GameObject found = gameManager.FindClosestItem(transform.position, pickUpRange, leftHandItem);
-                if (found)
-                {
-                    // pick up right object
-                    RequestOwnership(found);
-                    found.transform.parent = transform;
-                    rightHandItem = found;
-                    rightHandItem.GetComponent<ItemBehavior>().PickUp();
-                }
-                else
-                {
-                    // no object within range
-                }
-            }
+            rightHandItem = UpdateHand(rightHandItem, leftHandItem);
         }
 
         // set up for next time
