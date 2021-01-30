@@ -6,7 +6,6 @@ using MLAPI;
 
 public class GameManager : NetworkedBehaviour
 {
-    public GameObject torchPrefab;
     public GameObject[] itemPrefabs;
     public bool lazyInitialized;
 
