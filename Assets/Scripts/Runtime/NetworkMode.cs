@@ -4,19 +4,35 @@ using UnityEngine;
 using MLAPI;
 using MLAPI.Spawning;
 
+public enum ConnectionType
+{
+    Host,
+    Client,
+    Server,
+}
+
 public class NetworkMode : MonoBehaviour
 {
-    public bool isHost = false;
     public Vector3 positionToSpawnAt = new Vector3(0, 1000, 1000);
+    public bool MenuOn = true; // by default, menu is on
+
+    public GameObject NetworkMenu;
+    public TMPro.TMP_InputField serverIPInput;
     public Quaternion rotationToSpawnWith = Quaternion.Euler(0f,0f,0f);
+
+    protected Camera NetworkMenuCamera;
+    protected MLAPI.Transports.UNET.UnetTransport UnetTransport;
 
     // Start is called before the first frame update
     void Start()
     {
-        Setup();
+        NetworkMenu = GameObject.Find("NetworkMenu");
+        UnetTransport = GetComponent<MLAPI.Transports.UNET.UnetTransport>();
+        NetworkMenuCamera = GetComponentInChildren<Camera>();
+        CheckToRunServer();
     }
 
-    public void Setup()
+    public void CheckToRunServer()
     {
         //NetworkingManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
 
@@ -25,23 +41,44 @@ public class NetworkMode : MonoBehaviour
             NetworkingManager.Singleton.StartServer();
             Debug.Log("MLAPI started as a Server");
         }
-        else if (isHost == true)
+    }
+
+    public void ConnectAs(string connectionType)
+    {
+        UnetTransport.ConnectAddress = serverIPInput.text;
+        NetworkingManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
+
+        switch(connectionType)
         {
-            NetworkingManager.Singleton.StartHost(positionToSpawnAt);
-            Debug.Log("MLAPI started as a Host");
+            case "Host":
+                NetworkingManager.Singleton.StartHost();
+                Debug.Log("MLAPI started as a Host");
+                break;
+            case "Client":
+                NetworkingManager.Singleton.StartClient();
+                Debug.Log("MLAPI started as a Client");
+                break;
+            case "Server":
+                NetworkingManager.Singleton.StartServer();
+                Debug.Log("MLAPI started as a Server");
+                break;
         }
-        else
+
+        if (NetworkingManager.Singleton.IsHost || NetworkingManager.Singleton.IsClient || NetworkingManager.Singleton.IsServer)
         {
-            NetworkingManager.Singleton.StartClient();
-            Debug.Log("MLAPI started as a Client");
+            NetworkMenuCamera.enabled = false;
+            NetworkMenu.SetActive(false);
+        } else
+        {
+            Debug.Log("Did not connect!");
         }
     }
 
     private void ApprovalCheck(byte[] connectionData, ulong clientId, MLAPI.NetworkingManager.ConnectionApprovedDelegate callback)
     {
         //Your logic here
-        bool approve = true;
-        bool createPlayerObject = true;
+        //bool approve = true;
+        //bool createPlayerObject = true;
 
         // The prefab hash. Use null to use the default player prefab
         // If using this hash, replace "MyPrefabHashGenerator" with the name of a prefab added to the NetworkedPrefabs field of your NetworkingManager object in the scene
