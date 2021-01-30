@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using MLAPI;
 using MLAPI.Messaging;
+using MLAPI.NetworkedVar;
+using TMPro;
 
 // https://www.youtube.com/watch?v=vbILVirFV3A
 // Fird Person Controller
@@ -11,6 +13,7 @@ public class FPC : NetworkedBehaviour
 {
     [SerializeField] float speed = 10f;
     [SerializeField] float angularSpeed;
+    [SerializeField] TMPro.TMP_Text playerNameTag;
 
     CharacterController Controller;
     NetworkedObject NetObj;
@@ -25,7 +28,11 @@ public class FPC : NetworkedBehaviour
     float LeftItemUsed, RightItemUsed; // 1.0f is depressed, 0.0f not depressed
     bool LeftItemTriggered, RightItemTriggered;
     GameManager gameManager;
+    NetworkMenu networkMenu;
     GameObject leftHandItem, rightHandItem;
+
+    // networked vars
+    private NetworkedVar<string> playerName = new NetworkedVar<string>(new NetworkedVarSettings { WritePermission = NetworkedVarPermission.OwnerOnly }, "[Unnamed]");
 
     void Awake()
     {
@@ -33,13 +40,22 @@ public class FPC : NetworkedBehaviour
         NetObj = GetComponent<NetworkedObject>();
     }
 
+    private void NameChange(string prevName, string newName)
+    {
+        Debug.Log("Changed player name from " + prevName + " to " + newName);
+    }
+
     private void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        networkMenu = GameObject.Find("NetworkMenu").GetComponent<NetworkMenu>();
+
         if (IsLocalPlayer)
         {
+            // playerName.OnValueChanged += NameChange;
             GetComponentInChildren<Camera>().enabled = true;
             GetComponentInChildren<AudioListener>().enabled = true;
+            playerName.Value = networkMenu.playerName;
         }
     }
 
@@ -84,6 +100,8 @@ public class FPC : NetworkedBehaviour
             DoMovement();
             PickUpItems();
         }
+
+        playerNameTag.text = playerName.Value;
     }
 
     void DoMovement()

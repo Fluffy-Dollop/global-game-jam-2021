@@ -16,6 +16,7 @@ public class NetworkMode : MonoBehaviour
     public Vector3 positionToSpawnAt = new Vector3(0, 1000, 1000);
     public bool MenuOn = true; // by default, menu is on
 
+    public NetworkMenu networkMenu;
     public TMPro.TMP_InputField serverIPInput;
     public Quaternion rotationToSpawnWith = Quaternion.Euler(0f,0f,0f);
 
@@ -43,10 +44,11 @@ public class NetworkMode : MonoBehaviour
 
     public void ConnectAs(string connectionType)
     {
+
         UnetTransport.ConnectAddress = serverIPInput.text;
         NetworkingManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
 
-        switch(connectionType)
+        switch (connectionType)
         {
             case "Host":
                 NetworkingManager.Singleton.StartHost();
@@ -64,16 +66,11 @@ public class NetworkMode : MonoBehaviour
 
         if (NetworkingManager.Singleton.IsHost || NetworkingManager.Singleton.IsClient || NetworkingManager.Singleton.IsServer)
         {
-            DisableMenuObjects();
-        } else
+            networkMenu.DisableDisplay();
+        }
+        else
         {
             Debug.Log("Did not connect!");
-        }
-    }
-
-    private void DisableMenuObjects() {
-        foreach (GameObject menuObject in menuObjects) {
-            menuObject.SetActive(false);
         }
     }
 
