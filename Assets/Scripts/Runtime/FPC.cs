@@ -80,70 +80,81 @@ public class FPC : NetworkedBehaviour
     {
         if (IsLocalPlayer)
         {
-            float deltaTime = Time.deltaTime;
+            DoMovement();
+            PickUpItems();
+        }
+    }
 
-            // handle rotation
+    void DoMovement()
+    {
+        float deltaTime = Time.deltaTime;
 
-            currentEulerAngles += new Vector3(-MouseY * rotateSpeed, MouseX * rotateSpeed, 0);
-            currentEulerAngles.x = Mathf.Clamp(currentEulerAngles.x, -90, 90);
-            transform.eulerAngles = currentEulerAngles;
+        // handle rotation
 
-            // handle translation (walking)
+        currentEulerAngles += new Vector3(-MouseY * rotateSpeed, MouseX * rotateSpeed, 0);
+        currentEulerAngles.x = Mathf.Clamp(currentEulerAngles.x, -90, 90);
+        transform.eulerAngles = currentEulerAngles;
 
-            // convert the angle to radian and compute sine and cosine values once
-            float angDeg = transform.localEulerAngles.y;
-            float angRad = angDeg * Mathf.PI / 180.0f;
-            float cos = Mathf.Cos(angRad);
-            float sin = Mathf.Sin(angRad);
+        // handle translation (walking)
 
-            // compute relative forward and right as weighted compositions of absolute forward and right
-            // how much to weigh by? Follow the sine/cosine curves as you turn!
-            Vector3 relFwd = Move.y * ( cos * Vector3.forward + sin * Vector3.right);
-            Vector3 relRgt = Move.x * (-sin * Vector3.forward + cos * Vector3.right);
-            Vector3 moveDir = (relFwd + relRgt).normalized;
-            Vector3 newMove = speed * deltaTime * moveDir;
+        // convert the angle to radian and compute sine and cosine values once
+        float angDeg = transform.localEulerAngles.y;
+        float angRad = angDeg * Mathf.PI / 180.0f;
+        float cos = Mathf.Cos(angRad);
+        float sin = Mathf.Sin(angRad);
 
-            Controller.Move(newMove);
+        // compute relative forward and right as weighted compositions of absolute forward and right
+        // how much to weigh by? Follow the sine/cosine curves as you turn!
+        Vector3 relFwd = Move.y * (cos * Vector3.forward + sin * Vector3.right);
+        Vector3 relRgt = Move.x * (-sin * Vector3.forward + cos * Vector3.right);
+        Vector3 moveDir = (relFwd + relRgt).normalized;
+        Vector3 newMove = (speed * moveDir + Physics.gravity) * deltaTime;
 
-            // determine triggering
-            bool leftItemTriggered = (LeftItemUsed > 0.0f) && (prevLeftItemUsed <= 0.0f);
-            bool rightItemTriggered = (RightItemUsed > 0.0f) && (prevRightItemUsed <= 0.0f);
+        Controller.Move(newMove);
+    }
 
-            // if hit a left mouse click, then want to pick up object
-            var pickUpRange = 3.0f;
-            if (leftItemTriggered)
+    void PickUpItems()
+    {
+
+        // determine triggering
+        bool leftItemTriggered = (LeftItemUsed > 0.0f) && (prevLeftItemUsed <= 0.0f);
+        bool rightItemTriggered = (RightItemUsed > 0.0f) && (prevRightItemUsed <= 0.0f);
+
+        // if hit a left mouse click, then want to pick up object
+        var pickUpRange = 3.0f;
+        if (leftItemTriggered)
+        {
+            if (leftHandItem)
             {
-                if (leftHandItem)
-                {
-                    // todo: use that item!
+                // todo: use that item!
 
-                    // for now: drop it
-                    leftHandItem.transform.parent = transform.parent;
-                    leftHandItem = null;
+                // for now: drop it
+                leftHandItem.transform.parent = transform.parent;
+                leftHandItem = null;
+            }
+            else
+            {
+                // try to pick up an item in the left hand
+                // want to pick up object in left hand
+                GameObject found = gameManager.FindClosestItem(transform.position, pickUpRange);
+                if (found)
+                {
+                    // pick up left object
+                        RequestOwnership(found);
+                    found.transform.parent = transform;
+                    leftHandItem = found;
                 }
                 else
                 {
-                    // try to pick up an item in the left hand
-                    // want to pick up object in left hand
-                    GameObject found = gameManager.FindClosestItem(transform.position, pickUpRange);
-                    if (found)
-                    {
-                        // pick up left object
-                        RequestOwnership(found);
-                        found.transform.parent = transform;
-                        leftHandItem = found;
-                    }
-                    else
-                    {
-                        // no object within range
-                    }
+                    // no object within range
                 }
             }
-
-            // set up for next time
-            prevLeftItemUsed = LeftItemUsed;
-            prevRightItemUsed = RightItemUsed;
         }
+
+        // set up for next time
+        prevLeftItemUsed = LeftItemUsed;
+        prevRightItemUsed = RightItemUsed;
+    }
     }
 
     public void RequestOwnership(GameObject go)
@@ -157,5 +168,4 @@ public class FPC : NetworkedBehaviour
     private void RequestOwnershipRPC(ulong clientID, ulong objNetworkID)
     {
         GetNetworkedObject(objNetworkID).ChangeOwnership(clientID);
-    }
 }
