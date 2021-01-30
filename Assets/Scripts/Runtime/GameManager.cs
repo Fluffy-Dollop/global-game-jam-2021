@@ -14,21 +14,6 @@ public class GameManager : NetworkedBehaviour
 
     private void Start()
     {
-        /*
-        // find all objects and give them networked object components
-        GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
-        foreach (GameObject go in allObjects)
-        {
-            if (go.activeInHierarchy)
-            {
-                if (go.name == "torch")
-                {
-                    // add a NetworkedObject component
-                    go.AddComponent<NetworkedObject>();
-                }
-            }
-        }
-        //*/
     }
 
     public GameObject FindClosestItem(Vector3 position, float range)

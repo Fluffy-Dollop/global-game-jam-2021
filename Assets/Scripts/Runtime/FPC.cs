@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using MLAPI;
+using MLAPI.Messaging;
 
 // https://www.youtube.com/watch?v=vbILVirFV3A
 // Fird Person Controller
@@ -128,6 +129,7 @@ public class FPC : NetworkedBehaviour
                     if (found)
                     {
                         // pick up left object
+                        RequestOwnership(found);
                         found.transform.parent = transform;
                         leftHandItem = found;
                     }
@@ -142,5 +144,18 @@ public class FPC : NetworkedBehaviour
             prevLeftItemUsed = LeftItemUsed;
             prevRightItemUsed = RightItemUsed;
         }
+    }
+
+    public void RequestOwnership(GameObject go)
+    {
+        ulong objNetworkID = go.GetComponent<NetworkedObject>().NetworkId;
+        ulong ourClientID = GetComponent<NetworkedObject>().OwnerClientId;
+        InvokeServerRpc(RequestOwnershipRPC, ourClientID, objNetworkID);
+    }
+
+    [ServerRPC]
+    private void RequestOwnershipRPC(ulong clientID, ulong objNetworkID)
+    {
+        GetNetworkedObject(objNetworkID).ChangeOwnership(clientID);
     }
 }

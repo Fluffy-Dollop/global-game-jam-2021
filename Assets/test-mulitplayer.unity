@@ -356,6 +356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   torchPrefab: {fileID: 4964156685107365740, guid: 5c01010d03ec9a4438128ec69fdc0e24, type: 3}
+  lazyInitialized: 0
 --- !u!1 &1671530213
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,14 +406,14 @@ MonoBehaviour:
   MessageBufferSize: 5120
   MaxConnections: 100
   ConnectAddress: 76.103.36.63
-  ConnectPort: 5000
-  ServerListenPort: 30000
+  ConnectPort: 7777
+  ServerListenPort: 7777
   ServerWebsocketListenPort: 8887
   SupportWebsocket: 0
   Channels: []
   UseMLAPIRelay: 0
-  MLAPIRelayAddress: 76.103.36.63
-  MLAPIRelayPort: 30000
+  MLAPIRelayAddress: 34.220.146.91
+  MLAPIRelayPort: 8888
 --- !u!114 &1671530216
 MonoBehaviour:
   m_ObjectHideFlags: 0
