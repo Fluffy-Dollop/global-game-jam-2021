@@ -181,6 +181,7 @@ public class FPC : NetworkedBehaviour
 
                 // for now: drop it
                 rightHandItem.transform.parent = transform.parent;
+                rightHandItem.GetComponent<ItemBehavior>().Drop();
                 rightHandItem = null;
             }
             else
@@ -194,6 +195,7 @@ public class FPC : NetworkedBehaviour
                     RequestOwnership(found);
                     found.transform.parent = transform;
                     rightHandItem = found;
+                    rightHandItem.GetComponent<ItemBehavior>().PickUp();
                 }
                 else
                 {
