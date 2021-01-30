@@ -140,7 +140,7 @@ public class FPC : NetworkedBehaviour
                 if (found)
                 {
                     // pick up left object
-                        RequestOwnership(found);
+                    RequestOwnership(found);
                     found.transform.parent = transform;
                     leftHandItem = found;
                 }

@@ -7,6 +7,7 @@ using MLAPI;
 public class GameManager : NetworkedBehaviour
 {
     public GameObject torchPrefab;
+    public GameObject[] itemPrefabs;
     public bool lazyInitialized;
 
     void Awake()
@@ -51,18 +52,22 @@ public class GameManager : NetworkedBehaviour
         if (NetworkingManager.Singleton.IsHost && !lazyInitialized)
         {
             lazyInitialized = true;
-            // spawn a torch
-            var spawnPosition = new Vector3(
-                Random.Range(-1.0f, 1.0f),
-                0.5f,
-                Random.Range(-1.0f, 1.0f));
 
-            var spawnRotation = Quaternion.Euler(
-                0.0f,
-                Random.Range(0, 180),
-                0.0f);
-            var torch = (GameObject)Instantiate(torchPrefab, spawnPosition, spawnRotation);
-            torch.GetComponent<NetworkedObject>().Spawn();
+            // spawn various objects
+            foreach (var itemPrefab in itemPrefabs)
+            {
+                var spawnPosition = new Vector3(
+                    Random.Range(-10.0f, 10.0f),
+                    0.5f,
+                    Random.Range(-10.0f, 10.0f));
+
+                var spawnRotation = Quaternion.Euler(
+                    0.0f,
+                    Random.Range(0, 180),
+                    0.0f);
+                var item = (GameObject)Instantiate(itemPrefab, spawnPosition, spawnRotation);
+                item.GetComponent<NetworkedObject>().Spawn();
+            }
         }
     }
 }
