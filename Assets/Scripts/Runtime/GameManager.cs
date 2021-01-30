@@ -54,7 +54,7 @@ public class GameManager : NetworkedBehaviour
             // spawn a torch
             var spawnPosition = new Vector3(
                 Random.Range(-1.0f, 1.0f),
-                0.0f,
+                0.5f,
                 Random.Range(-1.0f, 1.0f));
 
             var spawnRotation = Quaternion.Euler(
