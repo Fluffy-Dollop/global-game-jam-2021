@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using MLAPI;
 
-//https://www.youtube.com/watch?v=vbILVirFV3A
+// https://www.youtube.com/watch?v=vbILVirFV3A
 // Fird Person Controller
 public class FPC : NetworkedBehaviour
 {
@@ -19,6 +19,13 @@ public class FPC : NetworkedBehaviour
     public float rotateSpeed = 1.0F;
     Vector3 currentEulerAngles;
 
+    // buttons
+    float prevLeftItemUsed, prevRightItemUsed;
+    float LeftItemUsed, RightItemUsed; // 1.0f is depressed, 0.0f not depressed
+    bool LeftItemTriggered, RightItemTriggered;
+    GameManager gameManager;
+    GameObject leftHandItem, rightHandItem;
+
     void Awake()
     {
         Controller = GetComponent<CharacterController>();
@@ -27,6 +34,7 @@ public class FPC : NetworkedBehaviour
 
     private void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         if (IsLocalPlayer)
         {
             GetComponentInChildren<Camera>().enabled = true;
@@ -48,6 +56,22 @@ public class FPC : NetworkedBehaviour
     public void OnRotationY(InputAction.CallbackContext context)
     {
         MouseY = context.ReadValue<float>();
+    }
+
+    public void OnLeftItem(InputAction.CallbackContext context)
+    {
+        LeftItemUsed = context.ReadValue<float>();
+
+        //Debug.Log("-----------");
+        //Debug.Log("OnLeftItem()");
+        //Debug.Log("LeftItemUsed " + LeftItemUsed);
+        //Debug.Log("LeftItemTriggered " + LeftItemTriggered);
+    }
+    public void OnRightItem(InputAction.CallbackContext context)
+    {
+        RightItemUsed = context.ReadValue<float>();
+        //Debug.Log("Left Item" + RightItemUsed);
+        //RightItemTriggered = (RightItemUsed > 0.0f) && (prevRightItemUsed <= 0.0f);
     }
 
     // Update is called once per frame
@@ -79,6 +103,43 @@ public class FPC : NetworkedBehaviour
             Vector3 newMove = speed * deltaTime * moveDir;
 
             Controller.Move(newMove);
+
+            // determine triggering
+            bool leftItemTriggered = (LeftItemUsed > 0.0f) && (prevLeftItemUsed <= 0.0f);
+            bool rightItemTriggered = (RightItemUsed > 0.0f) && (prevRightItemUsed <= 0.0f);
+
+            // if hit a left mouse click, then want to pick up object
+            var pickUpRange = 3.0f;
+            if (leftItemTriggered)
+            {
+                if (leftHandItem)
+                {
+                    // todo: use that item!
+                    // for now: drop it
+                    leftHandItem.transform.parent = transform.parent;
+                    leftHandItem = null;
+                }
+                else
+                {
+                    // try to pick up an item in the left hand
+                    // want to pick up object in left hand
+                    GameObject found = gameManager.FindClosestItem(transform.position, pickUpRange);
+                    if (found)
+                    {
+                        // pick up left object
+                        found.transform.parent = transform;
+                        leftHandItem = found;
+                    }
+                    else
+                    {
+                        // no object within range
+                    }
+                }
+            }
+
+            // set up for next time
+            prevLeftItemUsed = LeftItemUsed;
+            prevRightItemUsed = RightItemUsed;
         }
     }
 }

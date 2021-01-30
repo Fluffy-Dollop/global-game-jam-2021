@@ -41,6 +41,22 @@ public class @PlayerController : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""LeftItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""59a585d7-e897-4452-8e2d-50305aa3c292"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""RightItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""7221cb01-902e-4b40-9de3-b6ec153347b4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -120,6 +136,28 @@ public class @PlayerController : IInputActionCollection, IDisposable
                     ""action"": ""RotationY"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1beab7c5-52db-4d8b-bb17-3dbf02abac41"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8e04b9ff-13cb-44f4-898a-7c9272a8c674"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -131,6 +169,8 @@ public class @PlayerController : IInputActionCollection, IDisposable
         m_GamePlay_Movement = m_GamePlay.FindAction("Movement", throwIfNotFound: true);
         m_GamePlay_RotationX = m_GamePlay.FindAction("RotationX", throwIfNotFound: true);
         m_GamePlay_RotationY = m_GamePlay.FindAction("RotationY", throwIfNotFound: true);
+        m_GamePlay_LeftItem = m_GamePlay.FindAction("LeftItem", throwIfNotFound: true);
+        m_GamePlay_RightItem = m_GamePlay.FindAction("RightItem", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -183,6 +223,8 @@ public class @PlayerController : IInputActionCollection, IDisposable
     private readonly InputAction m_GamePlay_Movement;
     private readonly InputAction m_GamePlay_RotationX;
     private readonly InputAction m_GamePlay_RotationY;
+    private readonly InputAction m_GamePlay_LeftItem;
+    private readonly InputAction m_GamePlay_RightItem;
     public struct GamePlayActions
     {
         private @PlayerController m_Wrapper;
@@ -190,6 +232,8 @@ public class @PlayerController : IInputActionCollection, IDisposable
         public InputAction @Movement => m_Wrapper.m_GamePlay_Movement;
         public InputAction @RotationX => m_Wrapper.m_GamePlay_RotationX;
         public InputAction @RotationY => m_Wrapper.m_GamePlay_RotationY;
+        public InputAction @LeftItem => m_Wrapper.m_GamePlay_LeftItem;
+        public InputAction @RightItem => m_Wrapper.m_GamePlay_RightItem;
         public InputActionMap Get() { return m_Wrapper.m_GamePlay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -208,6 +252,12 @@ public class @PlayerController : IInputActionCollection, IDisposable
                 @RotationY.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnRotationY;
                 @RotationY.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnRotationY;
                 @RotationY.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnRotationY;
+                @LeftItem.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnLeftItem;
+                @LeftItem.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnLeftItem;
+                @LeftItem.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnLeftItem;
+                @RightItem.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnRightItem;
+                @RightItem.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnRightItem;
+                @RightItem.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnRightItem;
             }
             m_Wrapper.m_GamePlayActionsCallbackInterface = instance;
             if (instance != null)
@@ -221,6 +271,12 @@ public class @PlayerController : IInputActionCollection, IDisposable
                 @RotationY.started += instance.OnRotationY;
                 @RotationY.performed += instance.OnRotationY;
                 @RotationY.canceled += instance.OnRotationY;
+                @LeftItem.started += instance.OnLeftItem;
+                @LeftItem.performed += instance.OnLeftItem;
+                @LeftItem.canceled += instance.OnLeftItem;
+                @RightItem.started += instance.OnRightItem;
+                @RightItem.performed += instance.OnRightItem;
+                @RightItem.canceled += instance.OnRightItem;
             }
         }
     }
@@ -230,5 +286,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnRotationX(InputAction.CallbackContext context);
         void OnRotationY(InputAction.CallbackContext context);
+        void OnLeftItem(InputAction.CallbackContext context);
+        void OnRightItem(InputAction.CallbackContext context);
     }
 }

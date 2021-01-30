@@ -128,6 +128,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 6dfacb8f-2271-491c-a3db-c2e942a02838
     m_ActionName: GamePlay/New action
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3165286899159913295}
+        m_TargetAssemblyTypeName: FPC, Assembly-CSharp
+        m_MethodName: OnLeftItem
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 59a585d7-e897-4452-8e2d-50305aa3c292
+    m_ActionName: GamePlay/LeftItem[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3165286899159913295}
+        m_TargetAssemblyTypeName: FPC, Assembly-CSharp
+        m_MethodName: OnRightItem
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 7221cb01-902e-4b40-9de3-b6ec153347b4
+    m_ActionName: GamePlay/RightItem[/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: GamePlay
@@ -145,7 +177,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8801a18bfb58be644805774cc491b9db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 3165286899172036754}
   speed: 10
   angularSpeed: 0
   rotateSpeed: 1
