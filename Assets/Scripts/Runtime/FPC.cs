@@ -149,7 +149,7 @@ public class FPC : NetworkedBehaviour
 
                 // for now: drop it
                 leftHandItem.transform.parent = transform.parent;
-                leftHandItem.GetComponent<Rigidbody>().useGravity = true;
+                leftHandItem.GetComponent<ItemBehavior>().Drop();
                 leftHandItem = null;
             }
             else
@@ -163,7 +163,7 @@ public class FPC : NetworkedBehaviour
                     RequestOwnership(found);
                     found.transform.parent = transform;
                     leftHandItem = found;
-                    found.GetComponent<Rigidbody>().useGravity = false;
+                    leftHandItem.GetComponent<ItemBehavior>().PickUp();
                 }
                 else
                 {

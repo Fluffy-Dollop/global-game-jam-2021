@@ -12,9 +12,8 @@ GameObject:
   - component: {fileID: 3992891365721204354}
   - component: {fileID: 3985584839637498422}
   - component: {fileID: 2201846636374319502}
-  - component: {fileID: -5494107892975883692}
   - component: {fileID: 771195161380131813}
-  - component: {fileID: 2098314396941059443}
+  - component: {fileID: 8628103622672371857}
   m_Layer: 0
   m_Name: key
   m_TagString: item
@@ -102,54 +101,6 @@ MonoBehaviour:
   PrefabHashGenerator: key
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
---- !u!114 &-5494107892975883692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3969988650852930766}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -410691123, guid: 01701b64234b4d523d8045142cbc73fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FixedSendsPerSecond: 20
-  AssumeSyncedSends: 1
-  InterpolatePosition: 1
-  SnapDistance: 10
-  InterpolateServer: 1
-  MinMeters: 0.15
-  MinDegrees: 1.5
-  ExtrapolatePosition: 0
-  MaxSendsToExtrapolate: 5
-  Channel: 
-  EnableRange: 0
-  EnableNonProvokedResendChecks: 0
-  DistanceSendrate:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 20
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 500
-      value: 20
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!135 &771195161380131813
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -163,19 +114,15 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.58300275
   m_Center: {x: 0, y: -0.042658806, z: 0.0020782948}
---- !u!54 &2098314396941059443
-Rigidbody:
+--- !u!114 &8628103622672371857
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3969988650852930766}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 80
-  m_CollisionDetection: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0e492499634e75468c435871536096f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
