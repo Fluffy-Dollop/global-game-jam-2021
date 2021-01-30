@@ -4,6 +4,12 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/test-mulitplayer.unity
+    guid: 44e4817aea8dafe4289fd48c2a76fc4d
+  - enabled: 1
+    path: Assets/Scenes/Level1.unity
+    guid: 224b364d630ce4907b377d558733767e
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: da0d98d02bfb5b649a6037f769e61513, type: 2}

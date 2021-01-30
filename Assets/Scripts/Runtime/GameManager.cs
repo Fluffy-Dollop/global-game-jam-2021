@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using MLAPI;
 
 public class GameManager : NetworkedBehaviour
@@ -14,6 +15,7 @@ public class GameManager : NetworkedBehaviour
 
     private void Start()
     {
+        SceneManager.LoadScene("Scenes/Level1", LoadSceneMode.Additive);
     }
 
     public GameObject FindClosestItem(Vector3 position, float range)
