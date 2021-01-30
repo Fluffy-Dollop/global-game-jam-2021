@@ -120,8 +120,9 @@ public class FPC : NetworkedBehaviour
         bool leftItemTriggered = (LeftItemUsed > 0.0f) && (prevLeftItemUsed <= 0.0f);
         bool rightItemTriggered = (RightItemUsed > 0.0f) && (prevRightItemUsed <= 0.0f);
 
-        // if hit a left mouse click, then want to pick up object
         var pickUpRange = 3.0f;
+
+        // if hit a left mouse click, then want to pick up object in left hand
         if (leftItemTriggered)
         {
             if (leftHandItem)
@@ -136,13 +137,43 @@ public class FPC : NetworkedBehaviour
             {
                 // try to pick up an item in the left hand
                 // want to pick up object in left hand
-                GameObject found = gameManager.FindClosestItem(transform.position, pickUpRange);
+                GameObject found = gameManager.FindClosestItem(transform.position, pickUpRange, rightHandItem);
                 if (found)
                 {
                     // pick up left object
                     RequestOwnership(found);
                     found.transform.parent = transform;
                     leftHandItem = found;
+                }
+                else
+                {
+                    // no object within range
+                }
+            }
+        }
+
+        // if hit a right mouse click, then want to pick up object in right hand
+        if (rightItemTriggered)
+        {
+            if (rightHandItem)
+            {
+                // todo: use that item!
+
+                // for now: drop it
+                rightHandItem.transform.parent = transform.parent;
+                rightHandItem = null;
+            }
+            else
+            {
+                // try to pick up an item in the right hand
+                // want to pick up object in right hand
+                GameObject found = gameManager.FindClosestItem(transform.position, pickUpRange, leftHandItem);
+                if (found)
+                {
+                    // pick up right object
+                    RequestOwnership(found);
+                    found.transform.parent = transform;
+                    rightHandItem = found;
                 }
                 else
                 {

@@ -19,7 +19,7 @@ public class GameManager : NetworkedBehaviour
         SceneManager.LoadScene("Scenes/Level1", LoadSceneMode.Additive);
     }
 
-    public GameObject FindClosestItem(Vector3 position, float range)
+    public GameObject FindClosestItem(Vector3 position, float range, GameObject exclude)
     {
         GameObject closest = null;
 
@@ -34,6 +34,7 @@ public class GameManager : NetworkedBehaviour
                 if (!go) { continue; }
                 //Debug.Log("found object " + go.name);
                 if (go.tag != "item") { continue; } // for now ignore non-items!
+                if (go == exclude) { continue; }
                 // if we made it this far, pick the closest
                 if (!closest || (go.transform.position - position).sqrMagnitude < (closest.transform.position - position).sqrMagnitude)
                 {
