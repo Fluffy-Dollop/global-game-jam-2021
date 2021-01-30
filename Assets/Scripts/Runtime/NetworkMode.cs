@@ -16,19 +16,17 @@ public class NetworkMode : MonoBehaviour
     public Vector3 positionToSpawnAt = new Vector3(0, 1000, 1000);
     public bool MenuOn = true; // by default, menu is on
 
-    public GameObject NetworkMenu;
     public TMPro.TMP_InputField serverIPInput;
     public Quaternion rotationToSpawnWith = Quaternion.Euler(0f,0f,0f);
 
-    protected Camera NetworkMenuCamera;
+    public GameObject[] menuObjects;
+
     protected MLAPI.Transports.UNET.UnetTransport UnetTransport;
 
     // Start is called before the first frame update
     void Start()
     {
-        NetworkMenu = GameObject.Find("NetworkMenu");
         UnetTransport = GetComponent<MLAPI.Transports.UNET.UnetTransport>();
-        NetworkMenuCamera = GetComponentInChildren<Camera>();
         CheckToRunServer();
     }
 
@@ -66,11 +64,16 @@ public class NetworkMode : MonoBehaviour
 
         if (NetworkingManager.Singleton.IsHost || NetworkingManager.Singleton.IsClient || NetworkingManager.Singleton.IsServer)
         {
-            NetworkMenuCamera.enabled = false;
-            NetworkMenu.SetActive(false);
+            DisableMenuObjects();
         } else
         {
             Debug.Log("Did not connect!");
+        }
+    }
+
+    private void DisableMenuObjects() {
+        foreach (GameObject menuObject in menuObjects) {
+            menuObject.SetActive(false);
         }
     }
 

@@ -217,7 +217,7 @@ Transform:
   m_LocalScale: {x: 200, y: 10, z: 200}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &64737288
 MonoBehaviour:
@@ -1374,7 +1374,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcf32208fc2949643be5b1dad0b3edd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  torchPrefab: {fileID: 4964156685107365740, guid: 5c01010d03ec9a4438128ec69fdc0e24, type: 3}
   itemPrefabs:
   - {fileID: 298793973562763956, guid: 8232416b34cf23749919c00cb1791e0b, type: 3}
   - {fileID: 4191865245020178911, guid: 9426eef3c5dbf5949a3cb4eeefc304fe, type: 3}
@@ -1688,9 +1687,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   positionToSpawnAt: {x: 0, y: 0, z: 0}
   MenuOn: 1
-  NetworkMenu: {fileID: 1311576947}
   serverIPInput: {fileID: 277284984}
   rotationToSpawnWith: {x: 0, y: 0, z: 0, w: 1}
+  menuObjects:
+  - {fileID: 561616541}
+  - {fileID: 1311576947}
 --- !u!114 &1671530215
 MonoBehaviour:
   m_ObjectHideFlags: 0
