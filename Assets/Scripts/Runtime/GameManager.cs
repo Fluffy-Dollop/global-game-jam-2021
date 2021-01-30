@@ -61,7 +61,7 @@ public class GameManager : NetworkedBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (NetworkingManager.Singleton.isHost && !lazyInitialized)
+        if (NetworkingManager.Singleton.IsHost && !lazyInitialized)
         {
             lazyInitialized = true;
             // spawn a torch
