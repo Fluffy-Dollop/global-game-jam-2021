@@ -5,12 +5,30 @@ using MLAPI;
 
 public class GameManager : NetworkedBehaviour
 {
+    public GameObject torchPrefab;
+    public bool lazyInitialized;
+
     void Awake()
     {
     }
 
     private void Start()
     {
+        /*
+        // find all objects and give them networked object components
+        GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+        foreach (GameObject go in allObjects)
+        {
+            if (go.activeInHierarchy)
+            {
+                if (go.name == "torch")
+                {
+                    // add a NetworkedObject component
+                    go.AddComponent<NetworkedObject>();
+                }
+            }
+        }
+        //*/
     }
 
     public GameObject FindClosestItem(Vector3 position, float range)
@@ -27,7 +45,7 @@ public class GameManager : NetworkedBehaviour
                 // ignore certain cases
                 if (!go) { continue; }
                 //Debug.Log("found object " + go.name);
-                if (go.name != "torch") { continue; } // for now ignore non-torches!
+                if (go.tag != "item") { continue; } // for now ignore non-items!
                 // if we made it this far, pick the closest
                 if (!closest || (go.transform.position - position).sqrMagnitude < (closest.transform.position - position).sqrMagnitude)
                 {
@@ -36,11 +54,28 @@ public class GameManager : NetworkedBehaviour
             }
         }
 
+        Debug.Log("FindClosestItem returning " + (closest ? closest.name : "<null>"));
         return closest;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (NetworkingManager.Singleton.isHost && !lazyInitialized)
+        {
+            lazyInitialized = true;
+            // spawn a torch
+            var spawnPosition = new Vector3(
+                Random.Range(-1.0f, 1.0f),
+                0.0f,
+                Random.Range(-1.0f, 1.0f));
+
+            var spawnRotation = Quaternion.Euler(
+                0.0f,
+                Random.Range(0, 180),
+                0.0f);
+            var torch = (GameObject)Instantiate(torchPrefab, spawnPosition, spawnRotation);
+            torch.GetComponent<NetworkedObject>().Spawn();
+        }
     }
 }

@@ -115,6 +115,7 @@ public class FPC : NetworkedBehaviour
                 if (leftHandItem)
                 {
                     // todo: use that item!
+
                     // for now: drop it
                     leftHandItem.transform.parent = transform.parent;
                     leftHandItem = null;
