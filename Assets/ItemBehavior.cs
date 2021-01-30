@@ -10,6 +10,8 @@ public class ItemBehavior : MonoBehaviour
     Collider myCollider;
     NetworkedTransform myNetworkedTransform;
 
+    public bool isKinematic = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +19,7 @@ public class ItemBehavior : MonoBehaviour
         myCollider = GetComponent<Collider>();
         myRigidBody = gameObject.AddComponent<Rigidbody>();
         myRigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        myRigidBody.isKinematic = isKinematic;
         myNetworkedTransform = gameObject.AddComponent<NetworkedTransform>();
         tag = "item";
     }
