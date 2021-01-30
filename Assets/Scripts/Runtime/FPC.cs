@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using MLAPI;
+using MLAPI.Messaging;
 
 // https://www.youtube.com/watch?v=vbILVirFV3A
 // Fird Person Controller
@@ -67,6 +68,7 @@ public class FPC : NetworkedBehaviour
         //Debug.Log("LeftItemUsed " + LeftItemUsed);
         //Debug.Log("LeftItemTriggered " + LeftItemTriggered);
     }
+
     public void OnRightItem(InputAction.CallbackContext context)
     {
         RightItemUsed = context.ReadValue<float>();
@@ -114,7 +116,6 @@ public class FPC : NetworkedBehaviour
 
     void PickUpItems()
     {
-
         // determine triggering
         bool leftItemTriggered = (LeftItemUsed > 0.0f) && (prevLeftItemUsed <= 0.0f);
         bool rightItemTriggered = (RightItemUsed > 0.0f) && (prevRightItemUsed <= 0.0f);
@@ -139,6 +140,7 @@ public class FPC : NetworkedBehaviour
                 if (found)
                 {
                     // pick up left object
+                        RequestOwnership(found);
                     found.transform.parent = transform;
                     leftHandItem = found;
                 }
@@ -152,5 +154,18 @@ public class FPC : NetworkedBehaviour
         // set up for next time
         prevLeftItemUsed = LeftItemUsed;
         prevRightItemUsed = RightItemUsed;
+    }
+
+    public void RequestOwnership(GameObject go)
+    {
+        ulong objNetworkID = go.GetComponent<NetworkedObject>().NetworkId;
+        ulong ourClientID = GetComponent<NetworkedObject>().OwnerClientId;
+        InvokeServerRpc(RequestOwnershipRPC, ourClientID, objNetworkID);
+    }
+
+    [ServerRPC]
+    private void RequestOwnershipRPC(ulong clientID, ulong objNetworkID)
+    {
+        GetNetworkedObject(objNetworkID).ChangeOwnership(clientID);
     }
 }
