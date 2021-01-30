@@ -7,7 +7,7 @@ using MLAPI.Spawning;
 public class NetworkMode : MonoBehaviour
 {
     public bool isHost = false;
-    public Vector3 positionToSpawnAt = Vector3.zero;
+    public Vector3 positionToSpawnAt = new Vector3(0, 1000, 1000);
     public Quaternion rotationToSpawnWith = Quaternion.Euler(0f,0f,0f);
 
     // Start is called before the first frame update
@@ -18,7 +18,7 @@ public class NetworkMode : MonoBehaviour
 
     public void Setup()
     {
-        NetworkingManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
+        //NetworkingManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
 
         if (SystemInfo.graphicsDeviceName == null) // if this is headless, then it must be a server :/
         {
@@ -27,7 +27,7 @@ public class NetworkMode : MonoBehaviour
         }
         else if (isHost == true)
         {
-            NetworkingManager.Singleton.StartHost();
+            NetworkingManager.Singleton.StartHost(positionToSpawnAt);
             Debug.Log("MLAPI started as a Host");
         }
         else
@@ -48,6 +48,6 @@ public class NetworkMode : MonoBehaviour
         ulong? prefabHash = SpawnManager.GetPrefabHashFromGenerator("Player");
 
         //If approve is true, the connection gets added. If it's false. The client gets disconnected
-        callback(createPlayerObject, prefabHash, approve, positionToSpawnAt, rotationToSpawnWith);
+        //callback(createPlayerObject, prefabHash, approve, positionToSpawnAt, rotationToSpawnWith);
     }
 }
