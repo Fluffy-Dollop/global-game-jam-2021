@@ -131,6 +131,7 @@ public class FPC : NetworkedBehaviour
 
                 // for now: drop it
                 leftHandItem.transform.parent = transform.parent;
+                leftHandItem.GetComponent<Rigidbody>().useGravity = true;
                 leftHandItem = null;
             }
             else
@@ -144,6 +145,7 @@ public class FPC : NetworkedBehaviour
                     RequestOwnership(found);
                     found.transform.parent = transform;
                     leftHandItem = found;
+                    found.GetComponent<Rigidbody>().useGravity = false;
                 }
                 else
                 {
@@ -198,5 +200,13 @@ public class FPC : NetworkedBehaviour
     private void RequestOwnershipRPC(ulong clientID, ulong objNetworkID)
     {
         GetNetworkedObject(objNetworkID).ChangeOwnership(clientID);
+    }
+
+    // warp is a function so that we can set a warp point and late update it, thanks to the character controller that doesn't gaf
+    public void Warp(Vector3 newPos)
+    {
+        Controller.enabled = false;
+        transform.position = newPos;
+        Controller.enabled = true;
     }
 }
