@@ -136,8 +136,16 @@ public class FPC : NetworkedBehaviour
         float deltaTime = Time.deltaTime;
 
         // handle rotation
+        Debug.Log(MouseX);
 
-        currentEulerAngles += new Vector3(0, Move.x * rotateSpeed, 0);
+        Vector3 camForward = Camera.main.transform.forward;
+        camForward.y = 0f;
+        camForward.Normalize();
+
+        Vector3 playerForward = Controller.transform.forward;
+        float angle = Vector3.Angle(camForward, playerForward);
+
+        currentEulerAngles += new Vector3(0, MouseX * rotateSpeed, 0);
         currentEulerAngles.x = Mathf.Clamp(currentEulerAngles.x, -90, 90);
         transform.eulerAngles = currentEulerAngles;
 
@@ -152,9 +160,9 @@ public class FPC : NetworkedBehaviour
         // compute relative forward and right as weighted compositions of absolute forward and right
         // how much to weigh by? Follow the sine/cosine curves as you turn!
         Vector3 relFwd = Move.y * (cos * Vector3.forward + sin * Vector3.right);
-        // Vector3 relRgt = Move.x * (-sin * Vector3.forward + cos * Vector3.right);
+        Vector3 relRgt = Move.x * (-sin * Vector3.forward + cos * Vector3.right);
 
-        Vector3 moveDir = (relFwd).normalized;
+        Vector3 moveDir = (relFwd + relRgt).normalized;
 
         // update velocity
         velY += Physics.gravity.y * deltaTime;
