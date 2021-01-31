@@ -65,7 +65,7 @@ public class FPC : NetworkedBehaviour
             // GetComponentInChildren<AudioListener>().enabled = true;
             playerName.Value = networkMenu.playerName;
         }
-        else
+        else if (myCamera && myCamera.gameObject)
         {
             myCamera.gameObject.SetActive(false);
         }
@@ -128,7 +128,10 @@ public class FPC : NetworkedBehaviour
             }
         }
 
-        playerNameTag.text = playerName.Value;
+        if (playerNameTag != null && playerName != null)
+        {
+            playerNameTag.text = playerName.Value;
+        }
     }
 
     void DoMovement()
