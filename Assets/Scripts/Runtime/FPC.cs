@@ -15,7 +15,6 @@ public class FPC : NetworkedBehaviour
     [SerializeField] public float speed = 10f;
     [SerializeField] float angularSpeed;
     [SerializeField] TMPro.TMP_Text playerNameTag;
-
     [SerializeField] GameObject myCamera;
 
     CharacterController Controller;
@@ -25,6 +24,7 @@ public class FPC : NetworkedBehaviour
     float MouseY;
     public float rotateSpeed = 1.0F;
     Vector3 currentEulerAngles;
+    HelpDisplay helpMenu;
 
     // buttons
     float prevLeftItemUsed, prevRightItemUsed;
@@ -64,6 +64,7 @@ public class FPC : NetworkedBehaviour
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         networkMenu = GameObject.Find("NetworkMenu").GetComponent<NetworkMenu>();
+        helpMenu = GameObject.Find("HelpMenu").GetComponent<HelpDisplay>();
         startingPlane = GameObject.FindGameObjectWithTag("StartingPlatform").GetComponent<StartingPlane>();
 
         if (IsLocalPlayer)
@@ -125,6 +126,14 @@ public class FPC : NetworkedBehaviour
     public void OnRotationY(InputAction.CallbackContext context)
     {
         MouseY = context.ReadValue<float>();
+    }
+
+    public void OnHelpMenu(InputAction.CallbackContext context)
+    {
+        if (IsLocalPlayer)
+        {
+            helpMenu.Toggle();
+        }
     }
 
     public void OnLeftItem(InputAction.CallbackContext context)

@@ -68,6 +68,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Help",
+                    "type": "Button",
+                    "id": "79a03b31-6500-40ca-88a7-fa176e788588",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -200,6 +208,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "NextGameState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0d3ec6af-a68c-49db-8370-e9cd4b4d6ce3",
+                    "path": "<Keyboard>/h",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Help",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
