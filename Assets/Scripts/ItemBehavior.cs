@@ -14,8 +14,8 @@ public class ItemBehavior : MonoBehaviour
     public bool isKinematic = false;
     private bool isActive = false;
 
-    // Start is called before the first frame update
-    void Start()
+    // this is called before Start()
+    void Awake()
     {
         // setup components
         myCollider = GetComponent<Collider>();
@@ -24,6 +24,11 @@ public class ItemBehavior : MonoBehaviour
         myRigidBody.isKinematic = isKinematic;
         myNetworkedTransform = gameObject.AddComponent<NetworkedTransform>();
         tag = "item";
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
     }
 
     public bool IsHeld() { return holdingPlayer != null; }
