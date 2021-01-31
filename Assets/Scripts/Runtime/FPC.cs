@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.NetworkedVar;
@@ -11,19 +12,19 @@ using TMPro;
 // Fird Person Controller
 public class FPC : NetworkedBehaviour
 {
-    [SerializeField] float speed = 10f;
+    [SerializeField] public float speed = 10f;
     [SerializeField] float angularSpeed;
     [SerializeField] TMPro.TMP_Text playerNameTag;
-
-    [SerializeField] Cinemachine.CinemachineVirtualCamera myCamera;
+    [SerializeField] GameObject myCamera;
 
     CharacterController Controller;
     NetworkedObject NetObj;
     Vector2 Move;
     float MouseX;
     float MouseY;
-    public float rotateSpeed = 1.0F;
+    public float rotateSpeed = 1.0F; // overridden in player prefab!
     Vector3 currentEulerAngles;
+    HelpDisplay helpMenu;
 
     // buttons
     float prevLeftItemUsed, prevRightItemUsed;
@@ -43,6 +44,11 @@ public class FPC : NetworkedBehaviour
     // networked vars
     public NetworkedVar<string> playerName = new NetworkedVar<string>(new NetworkedVarSettings { WritePermission = NetworkedVarPermission.OwnerOnly }, "[Unnamed]");
 
+    // on-screen hearts
+    GameObject[] hearts = new GameObject[3];
+    float maxHealth = 3.0f;
+    float health = 2.0f; // between 0.0f and maxHealth
+
     void Awake()
     {
         Controller = GetComponent<CharacterController>();
@@ -58,6 +64,7 @@ public class FPC : NetworkedBehaviour
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         networkMenu = GameObject.Find("NetworkMenu").GetComponent<NetworkMenu>();
+        helpMenu = GameObject.Find("HelpMenu").GetComponent<HelpDisplay>();
         startingPlane = GameObject.FindGameObjectWithTag("StartingPlatform").GetComponent<StartingPlane>();
 
         if (IsLocalPlayer)
@@ -66,12 +73,45 @@ public class FPC : NetworkedBehaviour
             // GetComponentInChildren<Camera>().enabled = true;
             // GetComponentInChildren<AudioListener>().enabled = true;
             playerName.Value = networkMenu.playerName;
+
+            // find hearts
+            hearts[0] = GameObject.Find("Heart1");
+            hearts[1] = GameObject.Find("Heart2");
+            hearts[2] = GameObject.Find("Heart3");
+
+            DrawHealth();
         }
         else if (myCamera && myCamera.gameObject)
         {
-            myCamera.gameObject.SetActive(false);
+            myCamera.SetActive(false);
         }
     }
+
+    void DrawHealth()
+    {
+        float min = 0.25f;
+        float heart0 = Mathf.Clamp(health - 0.0f, min, 1.0f);
+        float heart1 = Mathf.Clamp(health - 1.0f, min, 1.0f);
+        float heart2 = Mathf.Clamp(health - 2.0f, min, 1.0f);
+        hearts[0].GetComponent<Image>().color = new Color(1, 1, 1, heart0);
+        hearts[1].GetComponent<Image>().color = new Color(1, 1, 1, heart1);
+        hearts[2].GetComponent<Image>().color = new Color(1, 1, 1, heart2);
+    }
+
+    public void Heal(float health)
+    {
+        this.health = Mathf.Clamp(this.health + health, 0.0f, maxHealth);
+        if (this.health <= 0.0f)
+        {
+            // todo: die
+        }
+
+        // update on-screen health display
+        DrawHealth();
+    }
+
+    public void Harm(float health) { Heal(-health); }
+    public void Hurt(float health) { Harm(health); }
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -86,6 +126,14 @@ public class FPC : NetworkedBehaviour
     public void OnRotationY(InputAction.CallbackContext context)
     {
         MouseY = context.ReadValue<float>();
+    }
+
+    public void OnHelpMenu(InputAction.CallbackContext context)
+    {
+        if (IsLocalPlayer)
+        {
+            helpMenu.Toggle();
+        }
     }
 
     public void OnLeftItem(InputAction.CallbackContext context)
@@ -191,7 +239,66 @@ public class FPC : NetworkedBehaviour
         }
     }
 
-    GameObject UpdateHand(GameObject itemInHand, GameObject itemInOtherHand, bool itemTriggered, bool itemReleased)
+    public void ReleaseHoldOfHand(ItemBehavior.HoldingHand whichHand)
+    {
+        GameObject itemInHand = null;
+
+        switch (whichHand)
+        {
+        case ItemBehavior.HoldingHand.Left:
+            itemInHand = leftHandItem;
+            leftHandItem = null;
+            break;
+        case ItemBehavior.HoldingHand.Right:
+            itemInHand = rightHandItem;
+            rightHandItem = null;
+            break;
+        default:
+            break;
+        }
+
+        if (itemInHand)
+        {
+            // ready to commence drop, Captain
+            itemInHand.GetComponent<ItemBehavior>().Drop();
+
+            // fix up our scene graph
+            itemInHand.transform.parent = transform.parent;
+        }
+    }
+
+    public IEnumerator TakeHoldOfInHand(ItemBehavior.HoldingHand whichHand, GameObject item)
+    {
+        // pick up this object in this hand
+        ulong itemNetID = item.GetComponent<NetworkedObject>().NetworkId;
+        ulong ourClientID = GetComponent<NetworkedObject>().OwnerClientId;
+        RpcResponse<bool> response = InvokeServerRpc(RequestOwnershipRPC, ourClientID, itemNetID);
+
+        while (!response.IsDone)
+        {
+            yield return null;
+        }
+        // assume response was true (ignore it)
+
+        // complete the handshake process
+        item.transform.parent = transform;
+
+        switch (whichHand)
+        {
+        case ItemBehavior.HoldingHand.Left:
+            leftHandItem = item;
+            break;
+        case ItemBehavior.HoldingHand.Right:
+            rightHandItem = item;
+            break;
+        default:
+            break;
+        }
+
+        item.GetComponent<ItemBehavior>().PickUp(gameObject, whichHand);
+    }
+
+    void UpdateHand(GameObject itemInHand, GameObject itemInOtherHand, bool itemTriggered, bool itemReleased, ItemBehavior.HoldingHand whichHand)
     {
         var pickUpRange = 3.0f;
 
@@ -202,9 +309,7 @@ public class FPC : NetworkedBehaviour
                 if (shouldDropItem)
                 {
                     // drop the item
-                    itemInHand.transform.parent = transform.parent;
-                    itemInHand.GetComponent<ItemBehavior>().Drop();
-                    itemInHand = null;
+                    ReleaseHoldOfHand(whichHand);
                 }
                 else
                 {
@@ -218,15 +323,11 @@ public class FPC : NetworkedBehaviour
                 GameObject found = gameManager.FindClosestItem(transform.position, pickUpRange, itemInOtherHand);
                 if (found)
                 {
-                    // pick up this object in this hand
-                    RequestOwnership(found);
-                    found.transform.parent = transform;
-                    itemInHand = found;
-                    itemInHand.GetComponent<ItemBehavior>().PickUp(gameObject);
+                    StartCoroutine(TakeHoldOfInHand(whichHand, found));
                 }
                 else
                 {
-                    // no object within range
+                    // no object within range (whoosh)
                 }
             }
         }
@@ -234,8 +335,6 @@ public class FPC : NetworkedBehaviour
         {
             itemInHand.GetComponent<ItemBehavior>().Deactivate();
         }
-
-        return itemInHand;
     }
 
     void HandleItems()
@@ -247,25 +346,28 @@ public class FPC : NetworkedBehaviour
         bool rightItemReleased = (prevRightItemUsed > 0.0f) && (RightItemUsed <= 0.0f);
 
        // update left and right items
-        leftHandItem = UpdateHand(leftHandItem, rightHandItem, leftItemTriggered, leftItemReleased);
-        rightHandItem = UpdateHand(rightHandItem, leftHandItem, rightItemTriggered, rightItemReleased);
+        UpdateHand(leftHandItem, rightHandItem, leftItemTriggered, leftItemReleased, ItemBehavior.HoldingHand.Left);
+        UpdateHand(rightHandItem, leftHandItem, rightItemTriggered, rightItemReleased, ItemBehavior.HoldingHand.Right);
 
         // set up for next time
         prevLeftItemUsed = LeftItemUsed;
         prevRightItemUsed = RightItemUsed;
     }
 
-    public void RequestOwnership(GameObject go)
+    public void RequestOwnership(GameObject item)
     {
-        ulong objNetworkID = go.GetComponent<NetworkedObject>().NetworkId;
+        ulong itemNetID = item.GetComponent<NetworkedObject>().NetworkId;
         ulong ourClientID = GetComponent<NetworkedObject>().OwnerClientId;
-        InvokeServerRpc(RequestOwnershipRPC, ourClientID, objNetworkID);
+        InvokeServerRpc(RequestOwnershipRPC, ourClientID, itemNetID);
     }
 
-    [ServerRPC]
-    private void RequestOwnershipRPC(ulong clientID, ulong objNetworkID)
+    [ServerRPC] // to be used in a co-routine this has to return something, even if ignored
+    private bool RequestOwnershipRPC(ulong clientID, ulong itemNetID)
     {
-        GetNetworkedObject(objNetworkID).ChangeOwnership(clientID);
+        GetNetworkedObject(itemNetID).ChangeOwnership(clientID);
+
+        // for now assume success
+        return true;
     }
 
     // warp is a function so that we can set a warp point and late update it, thanks to the character controller that doesn't gaf

@@ -6,11 +6,11 @@ using MLAPI.Prototyping;
 
 public class CrownItem : ItemBehavior
 {
-    GameManager gameManager;
-
-    void Start()
+    public override void OnPickUp()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        // put it on our head
+        transform.localPosition = new Vector3(0, 1, 0);
+        transform.localEulerAngles = new Vector3(0, 90, 0);
     }
 
     public override void OnActivate()

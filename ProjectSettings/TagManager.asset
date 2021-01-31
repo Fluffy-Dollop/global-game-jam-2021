@@ -10,6 +10,7 @@ TagManager:
   - ItemSpawn
   - CrownSpawn
   - LobbyWall
+  - UtilitySpawn
   layers:
   - Default
   - TransparentFX

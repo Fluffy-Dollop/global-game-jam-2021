@@ -97,6 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isKinematic: 0
+  itemType: 1
 --- !u!65 &5022173359449996540
 BoxCollider:
   m_ObjectHideFlags: 0

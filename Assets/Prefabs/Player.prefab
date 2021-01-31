@@ -398,6 +398,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: e16c09f4-63f7-423c-99b7-688958335052
     m_ActionName: GamePlay/NextGameState[/Keyboard/0]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3165286899159913295}
+        m_TargetAssemblyTypeName: FPC, Assembly-CSharp
+        m_MethodName: OnHelpMenu
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 79a03b31-6500-40ca-88a7-fa176e788588
+    m_ActionName: GamePlay/Help[/Keyboard/h]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: GamePlay
@@ -418,8 +434,10 @@ MonoBehaviour:
   speed: 10
   angularSpeed: 0
   playerNameTag: {fileID: 1476829866677934482}
-  myCamera: {fileID: 0}
-  rotateSpeed: 0.1
+  myCamera: {fileID: 1032085273097506938}
+  rotateSpeed: 0.5
+  playerName:
+    InternalValue: '[Unnamed]'
 --- !u!114 &5649143749782279034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -739,7 +757,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5057583297754475521}
-  m_LocalRotation: {x: 0.118675366, y: 1.5454663e-31, z: -2.4828086e-32, w: 0.9929331}
+  m_LocalRotation: {x: 0.118675366, y: -1e-45, z: -0, w: 0.9929331}
   m_LocalPosition: {x: 0, y: 0, z: -0.00000076293946}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1034,7 +1052,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7712581668747342462}
-  m_LocalRotation: {x: 0.26441672, y: 3e-45, z: -1e-45, w: 0.9644085}
+  m_LocalRotation: {x: 0.26441672, y: -1e-45, z: -0, w: 0.9644085}
   m_LocalPosition: {x: 0, y: 0, z: -0.00000038146973}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

@@ -22,6 +22,8 @@ public class ShieldItem : ItemBehavior
     {
         if (!IsHeld()) { return; }
 
+        bool left = holdingHand == HoldingHand.Left;
+
         // position shield out in front of the user & freeze it
         if (IsActive())
         {
@@ -31,8 +33,8 @@ public class ShieldItem : ItemBehavior
         else
         {
             // put to the side
-            transform.localPosition = new Vector3(-1, -1, 1);
-            transform.localEulerAngles = new Vector3(0, -135, 0);
+            transform.localPosition = left ? new Vector3(-1, -1, 1) : new Vector3(1, -1, 1);
+            transform.localEulerAngles = left ? new Vector3(0, -135, 0) : new Vector3(0, -45, 0);
         }
 
         // freeze it!
