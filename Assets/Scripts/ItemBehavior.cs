@@ -20,6 +20,7 @@ public class ItemBehavior : NetworkedBehaviour
     protected HoldingHand holdingHand = HoldingHand.None;
     NetworkedTransform myNetworkedTransform;
     public ItemType itemType;
+    public string displayName;
     public string help;
     private bool isActive = false;
     public bool nonConvex = false;

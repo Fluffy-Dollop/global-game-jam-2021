@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemType: 0
+  displayName: Lock
   help: (No use currently)
   nonConvex: 0
   gameManager: {fileID: 0}
