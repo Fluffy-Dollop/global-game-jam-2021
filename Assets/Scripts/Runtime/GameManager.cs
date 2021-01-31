@@ -151,10 +151,10 @@ public class GameManager : NetworkedBehaviour
                     break;
                 case (GameState.GameLobby):
                     InvokeClientRpcOnEveryone(ServerMessage, "Game Lobby!");
+                    CleanLobby();
                     StartLobby();
                     break;
                 case (GameState.GameCountdown):
-                    CleanLobby();
                     InvokeClientRpcOnEveryone(ServerMessage, "Initiating Countdown!");
                     break;
                 case (GameState.GamePlay):
