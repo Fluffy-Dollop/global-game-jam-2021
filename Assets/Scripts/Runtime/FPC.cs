@@ -46,7 +46,8 @@ public class FPC : NetworkedBehaviour
 
     // on-screen hearts
     GameObject[] hearts = new GameObject[3];
-    float health = 2.0f; // between 0.0f and 3.0f
+    float maxHealth = 3.0f;
+    float health = 2.0f; // between 0.0f and maxHealth
 
     void Awake()
     {
@@ -94,11 +95,22 @@ public class FPC : NetworkedBehaviour
         hearts[0].GetComponent<Image>().color = new Color(1, 1, 1, heart0);
         hearts[1].GetComponent<Image>().color = new Color(1, 1, 1, heart1);
         hearts[2].GetComponent<Image>().color = new Color(1, 1, 1, heart2);
-
-        //hearts[0].SetActive(health > 0.5f);
-        //hearts[1].SetActive(health > 1.5f);
-        //hearts[2].SetActive(health > 2.5f);
     }
+
+    public void Heal(float health)
+    {
+        this.health = Mathf.Clamp(this.health + health, 0.0f, maxHealth);
+        if (this.health <= 0.0f)
+        {
+            // todo: die
+        }
+
+        // update on-screen health display
+        DrawHealth();
+    }
+
+    public void Harm(float health) { Heal(-health); }
+    public void Hurt(float health) { Harm(health); }
 
     public void OnMove(InputAction.CallbackContext context)
     {
