@@ -9,6 +9,7 @@ TagManager:
   - RespawnTrigger
   - ItemSpawn
   - CrownSpawn
+  - LobbyWall
   layers:
   - Default
   - TransparentFX
