@@ -34,6 +34,7 @@ public class FPC : NetworkedBehaviour
     GameManager gameManager;
     NetworkMenu networkMenu;
     GameObject leftHandItem, rightHandItem;
+    StartingPlane startingPlane;
 
     // for jumping/falling
     float velY = 0.0f;
@@ -57,6 +58,7 @@ public class FPC : NetworkedBehaviour
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         networkMenu = GameObject.Find("NetworkMenu").GetComponent<NetworkMenu>();
+        startingPlane = GameObject.FindGameObjectWithTag("StartingPlatform").GetComponent<StartingPlane>();
 
         if (IsLocalPlayer)
         {
@@ -116,6 +118,17 @@ public class FPC : NetworkedBehaviour
     // Update is called once per frame
     void Update()
     {
+        switch(gameManager.gameState)
+        {
+            case GameState.GameCountdown:
+            case GameState.GameLobby:
+                if (!startingPlane.IsInside(transform.position))
+                {
+                    startingPlane.Respawn(gameObject);
+                }
+                break;
+        }
+
         if (IsLocalPlayer)
         {
             DoMovement();
