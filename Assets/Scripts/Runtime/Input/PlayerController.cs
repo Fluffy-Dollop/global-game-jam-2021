@@ -57,6 +57,14 @@ public class @PlayerController : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""DropItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""e9e4cc24-157b-441c-8cd5-08b4084f9a53"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -158,6 +166,17 @@ public class @PlayerController : IInputActionCollection, IDisposable
                     ""action"": ""RightItem"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dff34337-41bf-40ac-ad55-175b66a73441"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DropItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -171,6 +190,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
         m_GamePlay_RotationY = m_GamePlay.FindAction("RotationY", throwIfNotFound: true);
         m_GamePlay_LeftItem = m_GamePlay.FindAction("LeftItem", throwIfNotFound: true);
         m_GamePlay_RightItem = m_GamePlay.FindAction("RightItem", throwIfNotFound: true);
+        m_GamePlay_DropItem = m_GamePlay.FindAction("DropItem", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -225,6 +245,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
     private readonly InputAction m_GamePlay_RotationY;
     private readonly InputAction m_GamePlay_LeftItem;
     private readonly InputAction m_GamePlay_RightItem;
+    private readonly InputAction m_GamePlay_DropItem;
     public struct GamePlayActions
     {
         private @PlayerController m_Wrapper;
@@ -234,6 +255,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
         public InputAction @RotationY => m_Wrapper.m_GamePlay_RotationY;
         public InputAction @LeftItem => m_Wrapper.m_GamePlay_LeftItem;
         public InputAction @RightItem => m_Wrapper.m_GamePlay_RightItem;
+        public InputAction @DropItem => m_Wrapper.m_GamePlay_DropItem;
         public InputActionMap Get() { return m_Wrapper.m_GamePlay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -258,6 +280,9 @@ public class @PlayerController : IInputActionCollection, IDisposable
                 @RightItem.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnRightItem;
                 @RightItem.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnRightItem;
                 @RightItem.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnRightItem;
+                @DropItem.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnDropItem;
+                @DropItem.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnDropItem;
+                @DropItem.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnDropItem;
             }
             m_Wrapper.m_GamePlayActionsCallbackInterface = instance;
             if (instance != null)
@@ -277,6 +302,9 @@ public class @PlayerController : IInputActionCollection, IDisposable
                 @RightItem.started += instance.OnRightItem;
                 @RightItem.performed += instance.OnRightItem;
                 @RightItem.canceled += instance.OnRightItem;
+                @DropItem.started += instance.OnDropItem;
+                @DropItem.performed += instance.OnDropItem;
+                @DropItem.canceled += instance.OnDropItem;
             }
         }
     }
@@ -288,5 +316,6 @@ public class @PlayerController : IInputActionCollection, IDisposable
         void OnRotationY(InputAction.CallbackContext context);
         void OnLeftItem(InputAction.CallbackContext context);
         void OnRightItem(InputAction.CallbackContext context);
+        void OnDropItem(InputAction.CallbackContext context);
     }
 }

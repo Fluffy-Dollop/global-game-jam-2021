@@ -37,4 +37,9 @@ public class ItemBehavior : MonoBehaviour
         myCollider.enabled = true;
         myRigidBody.freezeRotation = false;
     }
+
+    public void Use()
+    {
+        Debug.Log("place holder: use item");
+    }
 }

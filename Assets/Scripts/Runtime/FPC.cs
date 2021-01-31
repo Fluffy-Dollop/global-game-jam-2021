@@ -27,6 +27,7 @@ public class FPC : NetworkedBehaviour
     float prevLeftItemUsed, prevRightItemUsed;
     float LeftItemUsed, RightItemUsed; // 1.0f is depressed, 0.0f not depressed
     bool LeftItemTriggered, RightItemTriggered;
+    bool shouldDropItem;
     GameManager gameManager;
     NetworkMenu networkMenu;
     GameObject leftHandItem, rightHandItem;
@@ -92,6 +93,11 @@ public class FPC : NetworkedBehaviour
         //RightItemTriggered = (RightItemUsed > 0.0f) && (prevRightItemUsed <= 0.0f);
     }
 
+    public void OnDropItem(InputAction.CallbackContext context)
+    {
+        shouldDropItem = context.ReadValue<float>() > 0.0f;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -138,12 +144,18 @@ public class FPC : NetworkedBehaviour
 
         if (itemInHand)
         {
-            // todo: use that item!
-
-            // for now: drop it
-            itemInHand.transform.parent = transform.parent;
-            itemInHand.GetComponent<ItemBehavior>().Drop();
-            itemInHand = null;
+            if (shouldDropItem)
+            {
+                // for now: drop it
+                itemInHand.transform.parent = transform.parent;
+                itemInHand.GetComponent<ItemBehavior>().Drop();
+                itemInHand = null;
+            }
+            else
+            {
+                // todo: use that item!
+                itemInHand.GetComponent<ItemBehavior>().Use();
+            }
         }
         else
         {
