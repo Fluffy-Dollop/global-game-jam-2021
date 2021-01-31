@@ -107,7 +107,7 @@ public class FPC : NetworkedBehaviour
         if (IsLocalPlayer)
         {
             DoMovement();
-            PickUpItems();
+            HandleItems();
         }
 
         playerNameTag.text = playerName.Value;
@@ -152,63 +152,64 @@ public class FPC : NetworkedBehaviour
         Controller.Move(newMove);
     }
 
-    GameObject UpdateHand(GameObject itemInHand, GameObject itemInOtherHand)
+    GameObject UpdateHand(GameObject itemInHand, GameObject itemInOtherHand, bool itemTriggered, bool itemReleased)
     {
         var pickUpRange = 3.0f;
 
-        if (itemInHand)
+        if (itemTriggered)
         {
-            if (shouldDropItem)
+            if (itemInHand)
             {
-                // for now: drop it
-                itemInHand.transform.parent = transform.parent;
-                itemInHand.GetComponent<ItemBehavior>().Drop();
-                itemInHand = null;
+                if (shouldDropItem)
+                {
+                    // drop the item
+                    itemInHand.transform.parent = transform.parent;
+                    itemInHand.GetComponent<ItemBehavior>().Drop();
+                    itemInHand = null;
+                }
+                else
+                {
+                    // use that item!
+                    itemInHand.GetComponent<ItemBehavior>().Activate();
+                }
             }
             else
             {
-                // todo: use that item!
-                itemInHand.GetComponent<ItemBehavior>().Use();
+                // try to pick up an item in this hand
+                GameObject found = gameManager.FindClosestItem(transform.position, pickUpRange, itemInOtherHand);
+                if (found)
+                {
+                    // pick up this object in this hand
+                    RequestOwnership(found);
+                    found.transform.parent = transform;
+                    itemInHand = found;
+                    itemInHand.GetComponent<ItemBehavior>().PickUp(gameObject);
+                }
+                else
+                {
+                    // no object within range
+                }
             }
         }
-        else
+        else if (itemReleased && itemInHand)
         {
-            // try to pick up an item in this hand
-            GameObject found = gameManager.FindClosestItem(transform.position, pickUpRange, itemInOtherHand);
-            if (found)
-            {
-                // pick up this object in this hand
-                RequestOwnership(found);
-                found.transform.parent = transform;
-                itemInHand = found;
-                itemInHand.GetComponent<ItemBehavior>().PickUp();
-            }
-            else
-            {
-                // no object within range
-            }
+            itemInHand.GetComponent<ItemBehavior>().Deactivate();
         }
 
         return itemInHand;
     }
 
-    void PickUpItems()
+    void HandleItems()
     {
-        // determine triggering
+        // determine triggering & releasing
         bool leftItemTriggered = (LeftItemUsed > 0.0f) && (prevLeftItemUsed <= 0.0f);
         bool rightItemTriggered = (RightItemUsed > 0.0f) && (prevRightItemUsed <= 0.0f);
+        bool leftItemReleased = (prevLeftItemUsed > 0.0f) && (LeftItemUsed <= 0.0f);
+        bool rightItemReleased = (prevRightItemUsed > 0.0f) && (RightItemUsed <= 0.0f);
 
-        // if hit a left mouse click, then want to pick up object in left hand
-        if (leftItemTriggered)
-        {
-            leftHandItem = UpdateHand(leftHandItem, rightHandItem);
-        }
-
-        // if hit a right mouse click, then want to pick up object in right hand
-        if (rightItemTriggered)
-        {
-            rightHandItem = UpdateHand(rightHandItem, leftHandItem);
-        }
+       // update left and right items
+        leftHandItem = UpdateHand(leftHandItem, rightHandItem, leftItemTriggered, leftItemReleased);
+        rightHandItem = UpdateHand(rightHandItem, leftHandItem, rightItemTriggered, rightItemReleased);
 
         // set up for next time
         prevLeftItemUsed = LeftItemUsed;

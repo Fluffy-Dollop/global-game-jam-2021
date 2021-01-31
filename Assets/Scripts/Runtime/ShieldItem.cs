@@ -6,8 +6,23 @@ using MLAPI.Prototyping;
 
 public class ShieldItem : ItemBehavior
 {
-    public override void Use()
+    public override void OnActivate()
     {
-        Debug.Log("place holder: use ShieldItem");
+        myCollider.enabled = true;
+
+        // position shield out in front of the user
+        // for now just put it in a fixed position in space
+        transform.position = new Vector3(0, 0, 3);
+    }
+
+    public override void OnDeactivate()
+    {
+        // disable collider again
+        myCollider.enabled = false;
+    }
+
+    void Update()
+    {
+        // called once per frame
     }
 }

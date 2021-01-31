@@ -6,11 +6,13 @@ using MLAPI.Prototyping;
 
 public class ItemBehavior : MonoBehaviour
 {
-    Rigidbody myRigidBody;
-    Collider myCollider;
+    protected Rigidbody myRigidBody;
+    protected Collider myCollider;
+    protected GameObject holdingPlayer;
     NetworkedTransform myNetworkedTransform;
 
     public bool isKinematic = false;
+    private bool isActive = false;
 
     // Start is called before the first frame update
     void Start()
@@ -24,8 +26,9 @@ public class ItemBehavior : MonoBehaviour
         tag = "item";
     }
 
-    virtual public void PickUp()
+    virtual public void PickUp(GameObject player)
     {
+        holdingPlayer = player;
         myRigidBody.useGravity = false;
         myCollider.enabled = false;
         myRigidBody.freezeRotation = true;
@@ -33,13 +36,34 @@ public class ItemBehavior : MonoBehaviour
 
     virtual public void Drop()
     {
+        holdingPlayer = null;
         myRigidBody.useGravity = true;
         myCollider.enabled = true;
         myRigidBody.freezeRotation = false;
+
+        // be sure to deactivate
+        Activate(false);
     }
 
-    virtual public void Use()
+    public bool IsActive() { return isActive; }
+
+    public void Activate(bool active = true)
     {
-        Debug.Log("place holder: use item");
+        // sanity check
+        if (!holdingPlayer) { return; }
+
+        if (active && !IsActive())
+        {
+            OnActivate();
+        }
+        else if (!active && IsActive())
+        {
+            OnDeactivate();
+        }
+        isActive = active;
     }
+    public void Deactivate() { Activate(false); }
+
+    virtual public void OnActivate() {}
+    virtual public void OnDeactivate() {}
 }
