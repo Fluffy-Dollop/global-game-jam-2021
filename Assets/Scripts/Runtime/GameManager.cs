@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using MLAPI;
 using MLAPI.NetworkedVar;
+using UnityEngine.InputSystem;
 
 public enum GameState
 {
@@ -78,6 +79,26 @@ public class GameManager : NetworkedBehaviour
                 var item = (GameObject)Instantiate(itemPrefab, spawnPosition, spawnRotation);
                 item.GetComponent<NetworkedObject>().Spawn();
             }
+        }
+    }
+
+
+    public void NextGameState()
+    {
+        switch (gameState.Value)
+        {
+            case (GameState.StartMenu):
+                SetGameState(GameState.GameCountdown);
+                break;
+            case (GameState.GameCountdown):
+                SetGameState(GameState.GamePlay);
+                break;
+            case (GameState.GamePlay):
+                SetGameState(GameState.GameWinner);
+                break;
+            case (GameState.GameWinner):
+                SetGameState(GameState.GameCountdown); // does not go back to start menu
+                break;
         }
     }
 
