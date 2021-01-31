@@ -372,6 +372,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: e9e4cc24-157b-441c-8cd5-08b4084f9a53
     m_ActionName: GamePlay/DropItem[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3165286899159913295}
+        m_TargetAssemblyTypeName: FPC, Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 508d3b3c-ab45-4e66-84f2-b4882bcfdbe5
+    m_ActionName: GamePlay/Jump[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: GamePlay

@@ -30,9 +30,14 @@ public class FPC : NetworkedBehaviour
     float LeftItemUsed, RightItemUsed; // 1.0f is depressed, 0.0f not depressed
     bool LeftItemTriggered, RightItemTriggered;
     bool shouldDropItem;
+    bool shouldJump;
     GameManager gameManager;
     NetworkMenu networkMenu;
     GameObject leftHandItem, rightHandItem;
+
+    // for jumping/falling
+    float velY = 0.0f;
+    float jumpForce = 5.0f;
 
     // networked vars
     private NetworkedVar<string> playerName = new NetworkedVar<string>(new NetworkedVarSettings { WritePermission = NetworkedVarPermission.OwnerOnly }, "[Unnamed]");
@@ -69,7 +74,6 @@ public class FPC : NetworkedBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         Move = context.ReadValue<Vector2>();
-        //Debug.Log(Move);
     }
 
     public void OnRotationX(InputAction.CallbackContext context)
@@ -104,6 +108,11 @@ public class FPC : NetworkedBehaviour
         shouldDropItem = context.ReadValue<float>() > 0.0f;
     }
 
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        shouldJump = context.ReadValue<float>() > 0.0f;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -111,6 +120,12 @@ public class FPC : NetworkedBehaviour
         {
             DoMovement();
             HandleItems();
+
+            // note: Controller.isGrounded may be true ONLY after Controller.Move() is called!
+            if (shouldJump && Controller.isGrounded)
+            {
+                velY = jumpForce;
+            }
         }
 
         playerNameTag.text = playerName.Value;
@@ -140,9 +155,18 @@ public class FPC : NetworkedBehaviour
         // Vector3 relRgt = Move.x * (-sin * Vector3.forward + cos * Vector3.right);
 
         Vector3 moveDir = (relFwd).normalized;
-        Vector3 newMove = (speed * moveDir + Physics.gravity) * deltaTime;
 
+        // update velocity
+        velY += Physics.gravity.y * deltaTime;
+
+        // update position
+        Vector3 newMove = (speed * moveDir + velY * Vector3.up) * deltaTime;
         Controller.Move(newMove);
+
+        if (Controller.isGrounded)
+        {
+            velY = 0;
+        }
     }
 
     GameObject UpdateHand(GameObject itemInHand, GameObject itemInOtherHand, bool itemTriggered, bool itemReleased)
