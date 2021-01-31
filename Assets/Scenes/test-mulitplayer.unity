@@ -3729,6 +3729,7 @@ MonoBehaviour:
   SpawnNumberRare: 1
   audioSource: {fileID: 1410187088}
   lobbyMusicSoundClip: {fileID: 8300000, guid: 1b9805f9abe78ae499e681f50c1f293f, type: 3}
+  gamePlayMusicSoundClip: {fileID: 8300000, guid: 3d4354691adaaee4785b8865913eb491, type: 3}
   defeatMusicSoundClip: {fileID: 8300000, guid: 7bdd9e13ebde5ab48894dacdc90c6c5d, type: 3}
 --- !u!114 &1410187087
 MonoBehaviour:

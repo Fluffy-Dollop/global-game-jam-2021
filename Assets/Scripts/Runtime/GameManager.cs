@@ -48,6 +48,7 @@ public class GameManager : NetworkedBehaviour
     // music
     public AudioSource audioSource;
     public AudioClip lobbyMusicSoundClip;
+    public AudioClip gamePlayMusicSoundClip;
     public AudioClip defeatMusicSoundClip;
 
     void Awake()
@@ -176,6 +177,7 @@ public class GameManager : NetworkedBehaviour
             break;
         case (GameState.GamePlay):
             Debug.Log("Playing...");
+            PlayMusicClip(gamePlayMusicSoundClip, 0.5f);
             break;
         case (GameState.GameWinner):
             // if we're a loser, play the music
@@ -192,8 +194,9 @@ public class GameManager : NetworkedBehaviour
             break;
         }
 
-        // lazily stop playing lobby or defeat music
+        // lazily stop playing lobby or defeat music (order here does not matter)
         StopStateMusic(GameState.GameLobby, lobbyMusicSoundClip);
+        StopStateMusic(GameState.GamePlay, gamePlayMusicSoundClip);
         StopStateMusic(GameState.GameWinner, defeatMusicSoundClip);
     }
 
