@@ -12,7 +12,7 @@ public enum ItemType
     Rare // x 1
 }
 
-public class ItemBehavior : MonoBehaviour
+public class ItemBehavior : NetworkedBehaviour
 {
     protected Rigidbody myRigidBody;
     protected Collider myCollider;

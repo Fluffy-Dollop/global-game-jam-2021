@@ -332,6 +332,7 @@ public class GameManager : NetworkedBehaviour
 
     public void RequestGameWin(GameObject player)
     {
+        print("GameManager.RequestGameWin()");
         // just grant it! Why the hell not?
         ulong playerNetID = player.GetComponent<NetworkedObject>().NetworkId;
         InvokeServerRpc(RequestWinRPC, playerNetID);
@@ -340,6 +341,7 @@ public class GameManager : NetworkedBehaviour
     [ServerRPC]
     private void RequestWinRPC(ulong playerNetID)
     {
+        print("GameManager.RequestWinRPC()");
         winner = GetNetworkedObject(playerNetID).gameObject.GetComponent<FPC>().playerName.Value;
         SetGameState(GameState.GameWinner);
         Debug.Log("winner: " + winner);
