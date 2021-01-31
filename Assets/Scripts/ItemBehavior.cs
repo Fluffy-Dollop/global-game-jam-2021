@@ -76,4 +76,9 @@ public class ItemBehavior : MonoBehaviour
 
     virtual public void OnActivate() {}
     virtual public void OnDeactivate() {}
+
+    public void Unspawn()
+    {
+        GetComponent<NetworkedObject>().UnSpawn();
+    }
 }

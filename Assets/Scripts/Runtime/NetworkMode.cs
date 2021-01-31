@@ -63,7 +63,7 @@ public class NetworkMode : MonoBehaviour
         {
             networkMenu.DisableDisplay();
 
-            gameManager.SetGameState(GameState.GameCountdown);
+            gameManager.SetGameState(GameState.GameLobby);
         }
         else
         {

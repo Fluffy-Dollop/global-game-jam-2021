@@ -10,6 +10,7 @@ using MLAPI.Messaging;
 public enum GameState
 {
     None,
+    GameLobby,
     GameCountdown,
     GamePlay,
     GameWinner,
@@ -18,7 +19,6 @@ public enum GameState
 public class GameManager : NetworkedBehaviour
 {
     public GameObject[] itemPrefabs;
-    public bool lazyInitialized;
 
     [SyncedVar]
     public GameState gameState = GameState.None;
@@ -30,6 +30,8 @@ public class GameManager : NetworkedBehaviour
 
     [SyncedVar]
     public string winner = "";
+
+    List<ItemBehavior> spawnedItems = new List<ItemBehavior>();
 
     void Awake()
     {
@@ -72,27 +74,6 @@ public class GameManager : NetworkedBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (IsHost && !lazyInitialized)
-        {
-            lazyInitialized = true;
-
-            // spawn various objects
-            foreach (var itemPrefab in itemPrefabs)
-            {
-                var spawnPosition = new Vector3(
-                    Random.Range(-10.0f, 10.0f),
-                    0.5f,
-                    Random.Range(-10.0f, 10.0f));
-
-                var spawnRotation = Quaternion.Euler(
-                    0.0f,
-                    Random.Range(0, 180),
-                    0.0f);
-                var item = (GameObject)Instantiate(itemPrefab, spawnPosition, spawnRotation);
-                item.GetComponent<NetworkedObject>().Spawn();
-            }
-        }
-
         RunGameState();
     }
 
@@ -103,6 +84,9 @@ public class GameManager : NetworkedBehaviour
         switch (gameState)
         {
             case (GameState.None):
+                SetGameState(GameState.GameLobby);
+                break;
+            case (GameState.GameLobby):
                 SetGameState(GameState.GameCountdown);
                 break;
             case (GameState.GameCountdown):
@@ -112,7 +96,7 @@ public class GameManager : NetworkedBehaviour
                 SetGameState(GameState.GameWinner);
                 break;
             case (GameState.GameWinner):
-                SetGameState(GameState.GameCountdown); // does not go back to start menu
+                SetGameState(GameState.GameLobby); // does not go back to start menu
                 break;
         }
     }
@@ -123,6 +107,8 @@ public class GameManager : NetworkedBehaviour
         {
             case (GameState.None):
                 countdownValue = countdownStart;
+                break;
+            case (GameState.GameLobby):
                 break;
             case (GameState.GameCountdown):
                 if (IsServer || IsHost)
@@ -156,14 +142,19 @@ public class GameManager : NetworkedBehaviour
             {
                 case (GameState.None):
                     break;
+                case (GameState.GameLobby):
+                    InvokeClientRpcOnEveryone(ServerMessage, "Game Lobby!");
+                    StartLobby();
+                    break;
                 case (GameState.GameCountdown):
+                    CleanLobby();
                     InvokeClientRpcOnEveryone(ServerMessage, "Initiating Countdown!");
                     break;
                 case (GameState.GamePlay):
-                    InvokeClientRpcOnEveryone(ServerMessage, "Initiating Play!");
+                    InvokeClientRpcOnEveryone(ServerMessage, "Let's Play!");
                     break;
                 case (GameState.GameWinner):
-                    InvokeClientRpcOnEveryone(ServerMessage, "Initiating WINNER!");
+                    InvokeClientRpcOnEveryone(ServerMessage, "WINNER!");
                     break;
             }
         }
@@ -173,5 +164,47 @@ public class GameManager : NetworkedBehaviour
     private void ServerMessage(string message)
     {
         Debug.Log(message);
+    }
+
+    /// <summary>
+    /// In the lobby, we randomly place items around to play with and test.
+    /// </summary>
+    private void StartLobby()
+    {
+        if (IsServer || IsHost)
+        {
+            // spawn various objects
+            foreach (var itemPrefab in itemPrefabs)
+            {
+                var spawnPosition = new Vector3(
+                    Random.Range(-10.0f, 10.0f),
+                    0.5f,
+                    Random.Range(-10.0f, 10.0f));
+
+                var spawnRotation = Quaternion.Euler(
+                    0.0f,
+                    Random.Range(0, 180),
+                    0.0f);
+                var item = (GameObject)Instantiate(itemPrefab, spawnPosition, spawnRotation);
+                item.GetComponent<NetworkedObject>().Spawn();
+                spawnedItems.Add(item.GetComponent<ItemBehavior>());
+            }
+
+            foreach (var item in spawnedItems)
+            {
+                Debug.Log(item.name);
+            }
+        }
+    }
+
+    private void CleanLobby()
+    {
+        foreach (ItemBehavior item in spawnedItems)
+        {
+            Debug.Log("Unspawning: " + item.name);
+            item.Unspawn();
+            Destroy(item.gameObject);
+        }
+        spawnedItems = new List<ItemBehavior>();
     }
 }
