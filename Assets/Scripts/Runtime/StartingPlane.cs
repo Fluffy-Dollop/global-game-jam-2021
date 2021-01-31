@@ -5,6 +5,7 @@ using UnityEngine;
 public class StartingPlane : MonoBehaviour
 {
     GameManager gameManager;
+    Collider bounds;
     List<GameObject> walls = new List<GameObject>();
 
     // Start is called before the first frame update
@@ -13,6 +14,7 @@ public class StartingPlane : MonoBehaviour
         // disable these on start
         GetComponent<MeshRenderer>().enabled = false;
         GetComponent<MeshCollider>().enabled = false;
+        bounds = transform.Find("Bounds").GetComponent<Collider>();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         foreach (GameObject wall in GameObject.FindGameObjectsWithTag("LobbyWall"))
         {
@@ -72,6 +74,18 @@ public class StartingPlane : MonoBehaviour
             default:
                 target.transform.position = newPos;
                 break;
+        }
+    }
+
+    public bool IsInside(Vector3 pos)
+    {
+        if (bounds.bounds.Contains(pos))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
