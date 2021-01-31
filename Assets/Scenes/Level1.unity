@@ -25055,6 +25055,8 @@ GameObject:
   - component: {fileID: 725806470}
   - component: {fileID: 725806469}
   - component: {fileID: 725806468}
+  - component: {fileID: 725806467}
+  - component: {fileID: 725806471}
   m_Layer: 0
   m_Name: lava
   m_TagString: Untagged
@@ -25062,6 +25064,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
+--- !u!114 &725806467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725806466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f5f3d395c6bbbb469823c388cee1e16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!23 &725806468
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -25125,6 +25139,20 @@ Transform:
   m_Father: {fileID: 236776087}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &725806471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725806466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3d28cb150ad86f4a8100312a4aea7a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uvAnimationRate: {x: 0.002, y: 0.002}
+  textureName: _MainTex
 --- !u!1001 &728605752
 PrefabInstance:
   m_ObjectHideFlags: 0
