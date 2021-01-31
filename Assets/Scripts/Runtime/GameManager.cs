@@ -91,28 +91,24 @@ public class GameManager : NetworkedBehaviour
 
     public void NextGameState(FPC player)
     {
-
-        if (IsServer || IsHost)
+        InvokeClientRpcOnEveryone(SendMessage, player.playerName.Value + " is manually editing state " + Time.deltaTime);
+        switch (gameState)
         {
-            InvokeClientRpcOnEveryone(SendMessage, player.playerName.Value + " is manually editing state " + Time.deltaTime);
-            switch (gameState)
-            {
-                case (GameState.None):
-                    SetGameState(GameState.GameLobby);
-                    break;
-                case (GameState.GameLobby):
-                    SetGameState(GameState.GameCountdown);
-                    break;
-                case (GameState.GameCountdown):
-                    SetGameState(GameState.GamePlay);
-                    break;
-                case (GameState.GamePlay):
-                    SetGameState(GameState.GameWinner);
-                    break;
-                case (GameState.GameWinner):
-                    SetGameState(GameState.GameLobby); // does not go back to start menu
-                    break;
-            }
+            case (GameState.None):
+                SetGameState(GameState.GameLobby);
+                break;
+            case (GameState.GameLobby):
+                SetGameState(GameState.GameCountdown);
+                break;
+            case (GameState.GameCountdown):
+                SetGameState(GameState.GamePlay);
+                break;
+            case (GameState.GamePlay):
+                SetGameState(GameState.GameWinner);
+                break;
+            case (GameState.GameWinner):
+                SetGameState(GameState.GameLobby); // does not go back to start menu
+                break;
         }
     }
 
