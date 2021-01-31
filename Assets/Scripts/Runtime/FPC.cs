@@ -42,7 +42,10 @@ public class FPC : NetworkedBehaviour
     float jumpForce = 5.0f;
 
     // sound effects
-    public AudioSource jumpSound;
+    public AudioSource audioSource;
+    public AudioClip jumpSoundClip;
+    public AudioClip pickupItemSoundClip;
+    public AudioClip dropItemSoundClip;
 
     // networked vars
     public NetworkedVar<string> playerName = new NetworkedVar<string>(new NetworkedVarSettings { WritePermission = NetworkedVarPermission.OwnerOnly }, "[Unnamed]");
@@ -56,6 +59,7 @@ public class FPC : NetworkedBehaviour
     {
         Controller = GetComponent<CharacterController>();
         NetObj = GetComponent<NetworkedObject>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void NameChange(string prevName, string newName)
@@ -189,9 +193,9 @@ public class FPC : NetworkedBehaviour
             if (shouldJump && Controller.isGrounded)
             {
                 velY = jumpForce;
-                if (jumpSound)
+                if (audioSource && jumpSoundClip)
                 {
-                    jumpSound.Play();
+                    audioSource.PlayOneShot(jumpSoundClip);
                 }
             }
         }
@@ -266,6 +270,12 @@ public class FPC : NetworkedBehaviour
 
         if (itemInHand)
         {
+            // play drop sound
+            if (audioSource && dropItemSoundClip)
+            {
+                audioSource.PlayOneShot(dropItemSoundClip);
+            }
+
             // ready to commence drop, Captain
             itemInHand.GetComponent<ItemBehavior>().Drop();
 
@@ -276,6 +286,12 @@ public class FPC : NetworkedBehaviour
 
     public IEnumerator TakeHoldOfInHand(ItemBehavior.HoldingHand whichHand, GameObject item)
     {
+        // play pickup sound
+        if (audioSource && pickupItemSoundClip)
+        {
+            audioSource.PlayOneShot(pickupItemSoundClip);
+        }
+
         // pick up this object in this hand
         ulong itemNetID = item.GetComponent<NetworkedObject>().NetworkId;
         ulong ourClientID = GetComponent<NetworkedObject>().OwnerClientId;

@@ -438,7 +438,10 @@ MonoBehaviour:
   playerNameTag: {fileID: 1476829866677934482}
   myCamera: {fileID: 1032085273097506938}
   rotateSpeed: 0.5
-  jumpSound: {fileID: -7108370310681416960}
+  audioSource: {fileID: 0}
+  jumpSoundClip: {fileID: 8300000, guid: 8952f3672693fdb478db2082647f7b5e, type: 3}
+  pickupItemSoundClip: {fileID: 8300000, guid: 44e8991549325a3438361f3f47fd2eb0, type: 3}
+  dropItemSoundClip: {fileID: 8300000, guid: 90830c6027ec40c468a291714dd6c449, type: 3}
   playerName:
     InternalValue: '[Unnamed]'
 --- !u!114 &5649143749782279034
@@ -663,7 +666,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 8952f3672693fdb478db2082647f7b5e, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
