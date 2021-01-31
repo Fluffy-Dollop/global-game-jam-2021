@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.NetworkedVar;
@@ -43,6 +44,10 @@ public class FPC : NetworkedBehaviour
     // networked vars
     public NetworkedVar<string> playerName = new NetworkedVar<string>(new NetworkedVarSettings { WritePermission = NetworkedVarPermission.OwnerOnly }, "[Unnamed]");
 
+    // on-screen hearts
+    GameObject[] hearts = new GameObject[3];
+    float health = 2.0f; // between 0.0f and 3.0f
+
     void Awake()
     {
         Controller = GetComponent<CharacterController>();
@@ -66,11 +71,33 @@ public class FPC : NetworkedBehaviour
             // GetComponentInChildren<Camera>().enabled = true;
             // GetComponentInChildren<AudioListener>().enabled = true;
             playerName.Value = networkMenu.playerName;
+
+            // find hearts
+            hearts[0] = GameObject.Find("Heart1");
+            hearts[1] = GameObject.Find("Heart2");
+            hearts[2] = GameObject.Find("Heart3");
+
+            DrawHealth();
         }
         else if (myCamera && myCamera.gameObject)
         {
             myCamera.SetActive(false);
         }
+    }
+
+    void DrawHealth()
+    {
+        float min = 0.25f;
+        float heart0 = Mathf.Clamp(health - 0.0f, min, 1.0f);
+        float heart1 = Mathf.Clamp(health - 1.0f, min, 1.0f);
+        float heart2 = Mathf.Clamp(health - 2.0f, min, 1.0f);
+        hearts[0].GetComponent<Image>().color = new Color(1, 1, 1, heart0);
+        hearts[1].GetComponent<Image>().color = new Color(1, 1, 1, heart1);
+        hearts[2].GetComponent<Image>().color = new Color(1, 1, 1, heart2);
+
+        //hearts[0].SetActive(health > 0.5f);
+        //hearts[1].SetActive(health > 1.5f);
+        //hearts[2].SetActive(health > 2.5f);
     }
 
     public void OnMove(InputAction.CallbackContext context)
