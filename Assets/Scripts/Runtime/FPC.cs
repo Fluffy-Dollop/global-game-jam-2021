@@ -456,6 +456,17 @@ public class FPC : NetworkedBehaviour
         }
     }
 
+    public void StartMatch(InputAction.CallbackContext context)
+    {
+        if ((IsServer || IsHost) && IsLocalPlayer && gameManager.gameState == GameState.GameLobby)
+        {
+            if (context.performed)
+            {
+                gameManager.NextGameState(this);
+            }
+        }
+    }
+
     void UpdateHandDisplay()
     {
         if (rightHandItem != null)
