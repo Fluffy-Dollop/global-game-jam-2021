@@ -41,7 +41,10 @@ public class NetworkMode : MonoBehaviour
     public void ConnectAs(string connectionType)
     {
 
-        UnetTransport.ConnectAddress = serverIPInput.text;
+        if (serverIPInput.text != "")
+        {
+            UnetTransport.ConnectAddress = serverIPInput.text;
+        }
         if (relayIPInput.text == "")
         {
             UnetTransport.UseMLAPIRelay = false;
