@@ -65,6 +65,14 @@ public class @PlayerController : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""NextGameState"",
+                    ""type"": ""Button"",
+                    ""id"": ""e16c09f4-63f7-423c-99b7-688958335052"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -177,6 +185,17 @@ public class @PlayerController : IInputActionCollection, IDisposable
                     ""action"": ""DropItem"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1490153c-6562-4b9f-b49e-c0242f7b1c69"",
+                    ""path"": ""<Keyboard>/0"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NextGameState"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -191,6 +210,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
         m_GamePlay_LeftItem = m_GamePlay.FindAction("LeftItem", throwIfNotFound: true);
         m_GamePlay_RightItem = m_GamePlay.FindAction("RightItem", throwIfNotFound: true);
         m_GamePlay_DropItem = m_GamePlay.FindAction("DropItem", throwIfNotFound: true);
+        m_GamePlay_NextGameState = m_GamePlay.FindAction("NextGameState", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -246,6 +266,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
     private readonly InputAction m_GamePlay_LeftItem;
     private readonly InputAction m_GamePlay_RightItem;
     private readonly InputAction m_GamePlay_DropItem;
+    private readonly InputAction m_GamePlay_NextGameState;
     public struct GamePlayActions
     {
         private @PlayerController m_Wrapper;
@@ -256,6 +277,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
         public InputAction @LeftItem => m_Wrapper.m_GamePlay_LeftItem;
         public InputAction @RightItem => m_Wrapper.m_GamePlay_RightItem;
         public InputAction @DropItem => m_Wrapper.m_GamePlay_DropItem;
+        public InputAction @NextGameState => m_Wrapper.m_GamePlay_NextGameState;
         public InputActionMap Get() { return m_Wrapper.m_GamePlay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -283,6 +305,9 @@ public class @PlayerController : IInputActionCollection, IDisposable
                 @DropItem.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnDropItem;
                 @DropItem.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnDropItem;
                 @DropItem.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnDropItem;
+                @NextGameState.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnNextGameState;
+                @NextGameState.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnNextGameState;
+                @NextGameState.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnNextGameState;
             }
             m_Wrapper.m_GamePlayActionsCallbackInterface = instance;
             if (instance != null)
@@ -305,6 +330,9 @@ public class @PlayerController : IInputActionCollection, IDisposable
                 @DropItem.started += instance.OnDropItem;
                 @DropItem.performed += instance.OnDropItem;
                 @DropItem.canceled += instance.OnDropItem;
+                @NextGameState.started += instance.OnNextGameState;
+                @NextGameState.performed += instance.OnNextGameState;
+                @NextGameState.canceled += instance.OnNextGameState;
             }
         }
     }
@@ -317,5 +345,6 @@ public class @PlayerController : IInputActionCollection, IDisposable
         void OnLeftItem(InputAction.CallbackContext context);
         void OnRightItem(InputAction.CallbackContext context);
         void OnDropItem(InputAction.CallbackContext context);
+        void OnNextGameState(InputAction.CallbackContext context);
     }
 }

@@ -3,11 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using MLAPI;
+using MLAPI.NetworkedVar;
+using UnityEngine.InputSystem;
+
+public enum GameState
+{
+    StartMenu,
+    GameCountdown,
+    GamePlay,
+    GameWinner,
+}
 
 public class GameManager : NetworkedBehaviour
 {
     public GameObject[] itemPrefabs;
     public bool lazyInitialized;
+    public NetworkedVar<GameState> gameState = new NetworkedVar<GameState>(GameState.StartMenu);
 
     void Awake()
     {
@@ -68,6 +79,58 @@ public class GameManager : NetworkedBehaviour
                 var item = (GameObject)Instantiate(itemPrefab, spawnPosition, spawnRotation);
                 item.GetComponent<NetworkedObject>().Spawn();
             }
+        }
+    }
+
+
+    public void NextGameState()
+    {
+        switch (gameState.Value)
+        {
+            case (GameState.StartMenu):
+                SetGameState(GameState.GameCountdown);
+                break;
+            case (GameState.GameCountdown):
+                SetGameState(GameState.GamePlay);
+                break;
+            case (GameState.GamePlay):
+                SetGameState(GameState.GameWinner);
+                break;
+            case (GameState.GameWinner):
+                SetGameState(GameState.GameCountdown); // does not go back to start menu
+                break;
+        }
+    }
+
+    void RunGameState()
+    {
+        switch(gameState.Value)
+        {
+            case (GameState.StartMenu):
+                break;
+            case (GameState.GameCountdown):
+                break;
+            case (GameState.GamePlay):
+                break;
+            case (GameState.GameWinner):
+                break;
+        }
+    }
+
+    public void SetGameState(GameState newState)
+    {
+        gameState.Value = newState;
+        Debug.Log("Switch to new state: " + gameState.Value);
+        switch (gameState.Value)
+        {
+            case (GameState.StartMenu):
+                break;
+            case (GameState.GameCountdown):
+                break;
+            case (GameState.GamePlay):
+                break;
+            case (GameState.GameWinner):
+                break;
         }
     }
 }

@@ -4,13 +4,6 @@ using UnityEngine;
 using MLAPI;
 using MLAPI.Spawning;
 
-public enum ConnectionType
-{
-    Host,
-    Client,
-    Server,
-}
-
 public class NetworkMode : MonoBehaviour
 {
     public Vector3 positionToSpawnAt = new Vector3(0, 1000, 1000);
