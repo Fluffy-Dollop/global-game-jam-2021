@@ -11,6 +11,7 @@ public class NetworkMode : MonoBehaviour
 
     public NetworkMenu networkMenu;
     public TMPro.TMP_InputField serverIPInput;
+    public TMPro.TMP_InputField relayIPInput;
     public Quaternion rotationToSpawnWith = Quaternion.Euler(0f,0f,0f);
     GameManager gameManager;
 
@@ -41,6 +42,14 @@ public class NetworkMode : MonoBehaviour
     {
 
         UnetTransport.ConnectAddress = serverIPInput.text;
+        if (relayIPInput.text == "")
+        {
+            UnetTransport.UseMLAPIRelay = false;
+        } else
+        {
+            UnetTransport.MLAPIRelayAddress = relayIPInput.text;
+            UnetTransport.UseMLAPIRelay = true;
+        }
         NetworkingManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
 
         switch (connectionType)
