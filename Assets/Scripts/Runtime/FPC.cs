@@ -178,7 +178,7 @@ public class FPC : NetworkedBehaviour
         }
     }
 
-    GameObject UpdateHand(GameObject itemInHand, GameObject itemInOtherHand, bool itemTriggered, bool itemReleased)
+    GameObject UpdateHand(GameObject itemInHand, GameObject itemInOtherHand, bool itemTriggered, bool itemReleased, ItemBehavior.HoldingHand whichHand)
     {
         var pickUpRange = 3.0f;
 
@@ -209,7 +209,7 @@ public class FPC : NetworkedBehaviour
                     RequestOwnership(found);
                     found.transform.parent = transform;
                     itemInHand = found;
-                    itemInHand.GetComponent<ItemBehavior>().PickUp(gameObject);
+                    itemInHand.GetComponent<ItemBehavior>().PickUp(gameObject, whichHand);
                 }
                 else
                 {
@@ -234,8 +234,8 @@ public class FPC : NetworkedBehaviour
         bool rightItemReleased = (prevRightItemUsed > 0.0f) && (RightItemUsed <= 0.0f);
 
        // update left and right items
-        leftHandItem = UpdateHand(leftHandItem, rightHandItem, leftItemTriggered, leftItemReleased);
-        rightHandItem = UpdateHand(rightHandItem, leftHandItem, rightItemTriggered, rightItemReleased);
+        leftHandItem = UpdateHand(leftHandItem, rightHandItem, leftItemTriggered, leftItemReleased, ItemBehavior.HoldingHand.Left);
+        rightHandItem = UpdateHand(rightHandItem, leftHandItem, rightItemTriggered, rightItemReleased, ItemBehavior.HoldingHand.Right);
 
         // set up for next time
         prevLeftItemUsed = LeftItemUsed;
