@@ -68,7 +68,7 @@ public class StartingPlane : MonoBehaviour
         switch(target.tag)
         {
             case "Player":
-                target.GetComponent<FPC>().Warp(newPos);
+                target.GetComponent<FPC>().Warp(newPos, true);
                 break;
             case "item":
             default:

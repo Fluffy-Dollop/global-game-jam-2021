@@ -15,10 +15,15 @@ public class Respawner : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Collision from " + other.tag);
-        if (other.CompareTag("Player") || other.CompareTag("item"))
+        if (other.CompareTag("Player"))
         {
             Debug.Log("Triggering a respawn for " + other.name);
             startingPlane.Respawn(other.gameObject);
+        } else if (other.CompareTag("item"))
+        {
+            ItemBehavior item = other.GetComponent<ItemBehavior>();
+            Debug.Log("Respawning item: " + item.name + " with type " + item.itemType);
+            GameObject.Find("GameManager").GetComponent<GameManager>().Respawn(item);
         }
     }
 }
