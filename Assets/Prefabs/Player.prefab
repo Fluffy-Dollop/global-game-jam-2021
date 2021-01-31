@@ -392,7 +392,7 @@ MonoBehaviour:
   speed: 10
   angularSpeed: 0
   playerNameTag: {fileID: 1476829866677934482}
-  camera: {fileID: 0}
+  myCamera: {fileID: 6057949781226070967}
   rotateSpeed: 1
 --- !u!114 &5649143749782279034
 MonoBehaviour:
@@ -811,8 +811,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5057583297754475521}
-  m_LocalRotation: {x: 0.07372309, y: 0.000000017878206, z: -0.0000000013216331, w: 0.99727875}
-  m_LocalPosition: {x: 0, y: 0, z: -0.0000011444092}
+  m_LocalRotation: {x: 0.073723085, y: -0.000000017688405, z: 0.0000000013076021, w: 0.99727875}
+  m_LocalPosition: {x: 0, y: 0, z: -0.0000022888185}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6721527730744028074}
@@ -1106,7 +1106,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7712581668747342462}
-  m_LocalRotation: {x: 0.10990053, y: 0.0000000042755386, z: -4.727476e-10, w: 0.9939426}
+  m_LocalRotation: {x: 0.10990053, y: -0.0000000042755386, z: 4.727476e-10, w: 0.9939426}
   m_LocalPosition: {x: 0, y: 0, z: -0.00000076293946}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
