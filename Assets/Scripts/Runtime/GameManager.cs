@@ -18,7 +18,9 @@ public class GameManager : NetworkedBehaviour
 {
     public GameObject[] itemPrefabs;
     public bool lazyInitialized;
-    public NetworkedVar<GameState> gameState = new NetworkedVar<GameState>(GameState.StartMenu);
+
+    [SyncedVar]
+    public GameState gameState = GameState.StartMenu;
 
     void Awake()
     {
@@ -60,7 +62,7 @@ public class GameManager : NetworkedBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (NetworkingManager.Singleton.IsHost && !lazyInitialized)
+        if (IsHost && !lazyInitialized)
         {
             lazyInitialized = true;
 
@@ -80,12 +82,14 @@ public class GameManager : NetworkedBehaviour
                 item.GetComponent<NetworkedObject>().Spawn();
             }
         }
+
+        RunGameState();
     }
 
 
     public void NextGameState()
     {
-        switch (gameState.Value)
+        switch (gameState)
         {
             case (GameState.StartMenu):
                 SetGameState(GameState.GameCountdown);
@@ -104,32 +108,38 @@ public class GameManager : NetworkedBehaviour
 
     void RunGameState()
     {
-        switch(gameState.Value)
+        switch(gameState)
         {
             case (GameState.StartMenu):
                 break;
             case (GameState.GameCountdown):
+                Debug.Log("Counting down...");
                 break;
             case (GameState.GamePlay):
+                Debug.Log("Playing...");
                 break;
             case (GameState.GameWinner):
+                Debug.Log("Who won?");
                 break;
         }
     }
 
     public void SetGameState(GameState newState)
     {
-        gameState.Value = newState;
-        Debug.Log("Switch to new state: " + gameState.Value);
-        switch (gameState.Value)
+        gameState = newState;
+        Debug.Log("Switch to new state: " + gameState);
+        switch (gameState)
         {
             case (GameState.StartMenu):
                 break;
             case (GameState.GameCountdown):
+                Debug.Log("Countdown!");
                 break;
             case (GameState.GamePlay):
+                Debug.Log("Play!");
                 break;
             case (GameState.GameWinner):
+                Debug.Log("WINNER!");
                 break;
         }
     }
