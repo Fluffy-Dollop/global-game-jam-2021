@@ -9,10 +9,6 @@ public class ShieldItem : ItemBehavior
     public override void OnActivate()
     {
         myCollider.enabled = true;
-
-        // position shield out in front of the user
-        // for now just put it in a fixed position in space
-        transform.position = new Vector3(0, 0, 3);
     }
 
     public override void OnDeactivate()
@@ -21,8 +17,27 @@ public class ShieldItem : ItemBehavior
         myCollider.enabled = false;
     }
 
+    // called once per frame
     void Update()
     {
-        // called once per frame
+        // position shield out in front of the user & freeze it
+        if (IsActive())
+        {
+            transform.localPosition = new Vector3(0, -1, 2);
+            transform.localEulerAngles = new Vector3(0, -90, 0);
+        }
+        else
+        {
+            // put to the side
+            transform.localPosition = new Vector3(-1, -1, 1);
+            transform.localEulerAngles = new Vector3(0, -135, 0);
+        }
+
+        if (IsHeld())
+        {
+            // freeze it!
+            myRigidBody.velocity = Vector3.zero;
+            myRigidBody.angularVelocity = Vector3.zero;
+        }
     }
 }

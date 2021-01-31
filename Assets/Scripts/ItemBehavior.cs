@@ -26,12 +26,16 @@ public class ItemBehavior : MonoBehaviour
         tag = "item";
     }
 
+    public bool IsHeld() { return holdingPlayer != null; }
     virtual public void PickUp(GameObject player)
     {
         holdingPlayer = player;
         myRigidBody.useGravity = false;
         myCollider.enabled = false;
         myRigidBody.freezeRotation = true;
+        myRigidBody.isKinematic = false;
+        myRigidBody.velocity = Vector3.zero;
+        myRigidBody.angularVelocity = Vector3.zero;
     }
 
     virtual public void Drop()
@@ -40,6 +44,7 @@ public class ItemBehavior : MonoBehaviour
         myRigidBody.useGravity = true;
         myCollider.enabled = true;
         myRigidBody.freezeRotation = false;
+        myRigidBody.isKinematic = isKinematic;
 
         // be sure to deactivate
         Activate(false);
