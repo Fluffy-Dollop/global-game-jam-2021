@@ -24,21 +24,21 @@ public class ItemBehavior : MonoBehaviour
         tag = "item";
     }
 
-    public void PickUp()
+    virtual public void PickUp()
     {
         myRigidBody.useGravity = false;
         myCollider.enabled = false;
         myRigidBody.freezeRotation = true;
     }
 
-    public void Drop()
+    virtual public void Drop()
     {
         myRigidBody.useGravity = true;
         myCollider.enabled = true;
         myRigidBody.freezeRotation = false;
     }
 
-    public void Use()
+    virtual public void Use()
     {
         Debug.Log("place holder: use item");
     }

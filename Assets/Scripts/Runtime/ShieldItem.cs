@@ -6,7 +6,7 @@ using MLAPI.Prototyping;
 
 public class ShieldItem : ItemBehavior
 {
-    public void Use()
+    public override void Use()
     {
         Debug.Log("place holder: use ShieldItem");
     }
