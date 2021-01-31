@@ -15,13 +15,11 @@ public class VikingHelmetItem : ItemBehavior
         transform.localEulerAngles = new Vector3(0, 90, 0);
 
         // give player controlling you enhanced speed
-        print("VikingHelmetItem.OnPickUp: " + holdingPlayer.GetComponent<FPC>().speed + " *= " + multiplier);
         holdingPlayer.GetComponent<FPC>().speed *= multiplier;
     }
 
     public override void OnDrop()
     {
-        print("VikingHelmetItem.OnDrop: " + holdingPlayer.GetComponent<FPC>().speed + " /= " + multiplier);
         // give player controlling you reduced speed
         holdingPlayer.GetComponent<FPC>().speed /= multiplier;
     }

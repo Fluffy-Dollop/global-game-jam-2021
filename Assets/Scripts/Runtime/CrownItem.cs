@@ -14,6 +14,13 @@ public class CrownItem : ItemBehavior
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
+    public override void OnPickUp()
+    {
+        // put it on our head
+        transform.localPosition = new Vector3(0, 1, 0);
+        transform.localEulerAngles = new Vector3(0, 90, 0);
+    }
+
     public override void OnActivate()
     {
         // trigger victory!
