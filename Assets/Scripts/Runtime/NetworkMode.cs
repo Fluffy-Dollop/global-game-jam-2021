@@ -21,7 +21,7 @@ public class NetworkMode : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         UnetTransport = GetComponent<MLAPI.Transports.UNET.UnetTransport>();
         CheckToRunServer();
     }

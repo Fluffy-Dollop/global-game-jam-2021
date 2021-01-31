@@ -16,6 +16,7 @@ public enum GameState
     GameWinner,
 }
 
+
 public class GameManager : NetworkedBehaviour
 {
     public GameObject[] itemPrefabs;
@@ -23,8 +24,11 @@ public class GameManager : NetworkedBehaviour
     [SyncedVar]
     public GameState gameState = GameState.None;
 
+    /// <summary>
+    /// Coundown stuff
+    /// </summary>
     [SyncedVar]
-    float countdownValue;
+    public float countdownValue;
     [SerializeField]
     float countdownStart = 3f;
 
@@ -78,9 +82,9 @@ public class GameManager : NetworkedBehaviour
     }
 
 
-    public void NextGameState()
+    public void NextGameState(FPC player)
     {
-        Debug.Log("Manually editing state");
+        InvokeClientRpcOnEveryone(SendMessage, player.playerName.Value + " is manually editing state " + Time.deltaTime);
         switch (gameState)
         {
             case (GameState.None):
@@ -106,7 +110,10 @@ public class GameManager : NetworkedBehaviour
         switch(gameState)
         {
             case (GameState.None):
-                countdownValue = countdownStart;
+                if (IsServer || IsHost)
+                {
+                    countdownValue = countdownStart;
+                }
                 break;
             case (GameState.GameLobby):
                 break;
@@ -118,8 +125,8 @@ public class GameManager : NetworkedBehaviour
 
                     if (countdownValue <= 0f)
                     {
-                        SetGameState(GameState.GamePlay);
                         countdownValue = countdownStart;
+                        SetGameState(GameState.GamePlay);
                     }
                 }
                 break;
@@ -137,7 +144,7 @@ public class GameManager : NetworkedBehaviour
         if (IsServer || IsHost)
         {
             gameState = newState;
-            Debug.Log("Switch to new state: " + gameState);
+            Debug.Log( "switching to new state: " + gameState);
             switch (gameState)
             {
                 case (GameState.None):

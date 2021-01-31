@@ -40,7 +40,7 @@ public class FPC : NetworkedBehaviour
     float jumpForce = 5.0f;
 
     // networked vars
-    private NetworkedVar<string> playerName = new NetworkedVar<string>(new NetworkedVarSettings { WritePermission = NetworkedVarPermission.OwnerOnly }, "[Unnamed]");
+    public NetworkedVar<string> playerName = new NetworkedVar<string>(new NetworkedVarSettings { WritePermission = NetworkedVarPermission.OwnerOnly }, "[Unnamed]");
 
     void Awake()
     {
@@ -55,7 +55,7 @@ public class FPC : NetworkedBehaviour
 
     private void Start()
     {
-        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         networkMenu = GameObject.Find("NetworkMenu").GetComponent<NetworkMenu>();
 
         if (IsLocalPlayer)
@@ -262,10 +262,13 @@ public class FPC : NetworkedBehaviour
 
     public void NextGameState(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if ((IsServer || IsHost) && IsLocalPlayer)
         {
-            // aliasing from player object, we just want one controller in one spot for now...
-            gameManager.NextGameState();
+            if (context.performed)
+            {
+                // aliasing from player object, we just want one controller in one spot for now...
+                gameManager.NextGameState(this);
+            }
         }
     }
 }
