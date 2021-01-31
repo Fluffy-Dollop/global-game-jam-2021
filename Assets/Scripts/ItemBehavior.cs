@@ -24,7 +24,7 @@ public class ItemBehavior : MonoBehaviour
     public ItemType itemType;
     private bool isActive = false;
 
-    public StartingPlane respawner;
+    public GameManager gameManager;
 
     public enum HoldingHand
     {
@@ -48,7 +48,7 @@ public class ItemBehavior : MonoBehaviour
     // Start is called before the first frame update
     protected void Start()
     {
-        respawner = GameObject.FindGameObjectWithTag("StartingPlatform").GetComponent<StartingPlane>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     virtual public void OnPickUp() {}
@@ -123,6 +123,6 @@ public class ItemBehavior : MonoBehaviour
         {
             holdingPlayer.GetComponent<FPC>().ReleaseHoldOfHand(holdingHand);
         }
-        respawner.Respawn(gameObject);
+        gameManager.Respawn(this);
     }
 }
