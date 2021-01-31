@@ -267,10 +267,20 @@ public class FPC : NetworkedBehaviour
         }
     }
 
-    public void TakeHoldOfInHand(ItemBehavior.HoldingHand whichHand, GameObject item)
+    public IEnumerator TakeHoldOfInHand(ItemBehavior.HoldingHand whichHand, GameObject item)
     {
         // pick up this object in this hand
-        RequestOwnership(item);
+        ulong itemNetID = item.GetComponent<NetworkedObject>().NetworkId;
+        ulong ourClientID = GetComponent<NetworkedObject>().OwnerClientId;
+        RpcResponse<bool> response = InvokeServerRpc(RequestOwnershipRPC, ourClientID, itemNetID);
+
+        while (!response.IsDone)
+        {
+            yield return null;
+        }
+        // assume response was true (ignore it)
+
+        // complete the handshake process
         item.transform.parent = transform;
 
         switch (whichHand)
@@ -313,7 +323,7 @@ public class FPC : NetworkedBehaviour
                 GameObject found = gameManager.FindClosestItem(transform.position, pickUpRange, itemInOtherHand);
                 if (found)
                 {
-                    TakeHoldOfInHand(whichHand, found);
+                    StartCoroutine(TakeHoldOfInHand(whichHand, found));
                 }
                 else
                 {
@@ -344,17 +354,20 @@ public class FPC : NetworkedBehaviour
         prevRightItemUsed = RightItemUsed;
     }
 
-    public void RequestOwnership(GameObject go)
+    public void RequestOwnership(GameObject item)
     {
-        ulong objNetworkID = go.GetComponent<NetworkedObject>().NetworkId;
+        ulong itemNetID = item.GetComponent<NetworkedObject>().NetworkId;
         ulong ourClientID = GetComponent<NetworkedObject>().OwnerClientId;
-        InvokeServerRpc(RequestOwnershipRPC, ourClientID, objNetworkID);
+        InvokeServerRpc(RequestOwnershipRPC, ourClientID, itemNetID);
     }
 
-    [ServerRPC]
-    private void RequestOwnershipRPC(ulong clientID, ulong objNetworkID)
+    [ServerRPC] // to be used in a co-routine this has to return something, even if ignored
+    private bool RequestOwnershipRPC(ulong clientID, ulong itemNetID)
     {
-        GetNetworkedObject(objNetworkID).ChangeOwnership(clientID);
+        GetNetworkedObject(itemNetID).ChangeOwnership(clientID);
+
+        // for now assume success
+        return true;
     }
 
     // warp is a function so that we can set a warp point and late update it, thanks to the character controller that doesn't gaf
