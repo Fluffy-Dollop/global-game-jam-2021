@@ -217,39 +217,65 @@ public class GameManager : NetworkedBehaviour
             switch (itemBehavior.itemType)
             {
                 case ItemType.Crown:
-                    AssignSpawn(GetAvailableSpawnList("CrownSpawn"), SpawnNumberCrowns, itemPrefab);
+                    LoopAssignSpawn(SpawnNumberCrowns, GetAvailableSpawnList("CrownSpawn"), itemPrefab);
                     break;
                 case ItemType.Utility:
-                    AssignSpawn(GetAvailableSpawnList("UtilitySpawn"), 1, itemPrefab);
-                    AssignSpawn(GetAvailableSpawnList("ItemSpawn"), SpawnNumberUtility, itemPrefab);
+                    LoopAssignSpawn(1, GetAvailableSpawnList("UtilitySpawn"), itemPrefab);
+                    LoopAssignSpawn(SpawnNumberUtility, GetAvailableSpawnList("ItemSpawn"), itemPrefab);
                     break;
                 case ItemType.Rare:
-                    AssignSpawn(GetAvailableSpawnList("ItemSpawn"), SpawnNumberRare, itemPrefab);
+                    LoopAssignSpawn(SpawnNumberRare, GetAvailableSpawnList("ItemSpawn"), itemPrefab);
                     break;
                 case ItemType.Normal:
-                    AssignSpawn(GetAvailableSpawnList("ItemSpawn"), SpawnNumberNormal, itemPrefab);
+                    LoopAssignSpawn(SpawnNumberNormal, GetAvailableSpawnList("ItemSpawn"), itemPrefab);
                     break;
             }
         }
     }
 
-    public void AssignSpawn(List<ItemSpawn> spawnList, int count, GameObject itemPrefab)
+    public void LoopAssignSpawn(int count, List<ItemSpawn> spawnList, GameObject itemPrefab)
     {
         for (var i = 0; i < count; i++)
         {
-            if (spawnList.Count <= 0)
-            {
-                var item = (GameObject)Instantiate(itemPrefab, RandomStartPlanePosition(), RandomRotation());
-                item.GetComponent<NetworkedObject>().Spawn();
-            }
-            else
-            {
-                int index = Random.Range(0, spawnList.Count - 1);
-                ItemSpawn spawn = spawnList[index];
-                spawn.item = itemPrefab.GetComponent<ItemBehavior>();
-                GameObject item = Instantiate(itemPrefab, spawn.transform.position, RandomRotation());
-                item.GetComponent<NetworkedObject>().Spawn();
-            }
+            var item = (GameObject)Instantiate(itemPrefab, RandomStartPlanePosition(), RandomRotation());
+            AssignSpawn(spawnList, item);
+        }
+    }
+
+    public void AssignSpawn(List<ItemSpawn> spawnList, GameObject item)
+    {
+        if (spawnList.Count > 0)
+        {
+            int index = Random.Range(0, spawnList.Count - 1);
+            ItemSpawn spawn = spawnList[index];
+            spawn.item = item.GetComponent<ItemBehavior>();
+            item.transform.position = spawn.transform.position;
+        }
+
+        NetworkedObject no = item.GetComponent<NetworkedObject>();
+        if (!no.IsSpawned)
+        {
+            no.Spawn();
+        }
+    }
+
+    public void Respawn(ItemBehavior item)
+    {
+        switch (item.itemType)
+        {
+            case ItemType.Crown:
+                AssignSpawn(GetAvailableSpawnList("CrownSpawn"), item.gameObject);
+                break;
+            case ItemType.Utility:
+                AssignSpawn(GetAvailableSpawnList("UtilitySpawn"), item.gameObject);
+                AssignSpawn(GetAvailableSpawnList("ItemSpawn"), item.gameObject);
+                break;
+            case ItemType.Rare:
+                AssignSpawn(GetAvailableSpawnList("ItemSpawn"), item.gameObject);
+                break;
+            case ItemType.Normal:
+                AssignSpawn(GetAvailableSpawnList("ItemSpawn"), item.gameObject);
+                break;
         }
     }
 
