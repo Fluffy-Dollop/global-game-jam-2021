@@ -55,7 +55,7 @@ public class FPC : NetworkedBehaviour
 
     private void Start()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         networkMenu = GameObject.Find("NetworkMenu").GetComponent<NetworkMenu>();
 
         if (IsLocalPlayer)
