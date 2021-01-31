@@ -30,6 +30,8 @@ public class GameManager : NetworkedBehaviour
     public float countdownValue;
     [SerializeField]
     float countdownStart = 3f;
+    [SerializeField]
+    float countdownWinStart = 5f;
 
     [SyncedVar]
     public string winner = "";
@@ -122,14 +124,7 @@ public class GameManager : NetworkedBehaviour
             case (GameState.GameCountdown):
                 if (IsServer || IsHost)
                 {
-                    countdownValue -= Time.deltaTime;
-                    InvokeClientRpcOnEveryone(ServerMessage, "Counting down..." + Mathf.Ceil(countdownValue));
-
-                    if (countdownValue <= 0f)
-                    {
-                        countdownValue = countdownStart;
-                        SetGameState(GameState.GamePlay);
-                    }
+                    CountDownToGameState(GameState.GamePlay, countdownWinStart, "Counting down to begin game...");
                 }
                 break;
             case (GameState.GamePlay):
@@ -137,7 +132,23 @@ public class GameManager : NetworkedBehaviour
                 break;
             case (GameState.GameWinner):
                 Debug.Log("Who won?");
+                if (IsServer || IsHost)
+                {
+                    CountDownToGameState(GameState.GameLobby, countdownStart, "Counting down to restart game...");
+                }
                 break;
+        }
+    }
+
+    void CountDownToGameState(GameState newGameState, float nextStart, string message)
+    {
+        countdownValue -= Time.deltaTime;
+        InvokeClientRpcOnEveryone(ServerMessage, message + Mathf.Ceil(countdownValue));
+
+        if (countdownValue <= 0f)
+        {
+            countdownValue = nextStart;
+            SetGameState(newGameState);
         }
     }
 
@@ -163,6 +174,7 @@ public class GameManager : NetworkedBehaviour
                 case (GameState.GamePlay):
                     PlaySpawnItems();
                     InvokeClientRpcOnEveryone(ServerMessage, "Let's Play!");
+                    countdownValue = countdownWinStart; // resetting for the win state
                     break;
                 case (GameState.GameWinner):
                     InvokeClientRpcOnEveryone(ServerMessage, "WINNER!");
