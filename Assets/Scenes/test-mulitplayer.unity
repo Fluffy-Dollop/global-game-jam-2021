@@ -246,7 +246,7 @@ GameObject:
   - component: {fileID: 90644014}
   - component: {fileID: 90644018}
   m_Layer: 0
-  m_Name: StartingPlane
+  m_Name: Starting Plane
   m_TagString: StartingPlatform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -622,7 +622,7 @@ GameObject:
   - component: {fileID: 561616543}
   - component: {fileID: 561616545}
   m_Layer: 0
-  m_Name: MainCamera
+  m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1631,7 +1631,7 @@ GameObject:
   - component: {fileID: 1160964590}
   - component: {fileID: 1160964589}
   m_Layer: 0
-  m_Name: EventSystem
+  m_Name: Event System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2201,7 +2201,7 @@ GameObject:
   - component: {fileID: 1410187086}
   - component: {fileID: 1410187087}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: Game Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2846,7 +2846,7 @@ GameObject:
   - component: {fileID: 1671530215}
   - component: {fileID: 1671530214}
   m_Layer: 0
-  m_Name: NetworkingManager
+  m_Name: Networking Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
