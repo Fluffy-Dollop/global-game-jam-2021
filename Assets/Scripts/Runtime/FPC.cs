@@ -15,7 +15,7 @@ public class FPC : NetworkedBehaviour
     [SerializeField] float angularSpeed;
     [SerializeField] TMPro.TMP_Text playerNameTag;
 
-    [SerializeField] Cinemachine.CinemachineVirtualCamera myCamera;
+    [SerializeField] GameObject myCamera;
 
     CharacterController Controller;
     NetworkedObject NetObj;
@@ -69,7 +69,7 @@ public class FPC : NetworkedBehaviour
         }
         else if (myCamera && myCamera.gameObject)
         {
-            myCamera.gameObject.SetActive(false);
+            myCamera.SetActive(false);
         }
     }
 

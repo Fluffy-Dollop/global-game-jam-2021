@@ -15,6 +15,6 @@ public class ItemSpawn : MonoBehaviour
 
     private void Start()
     {
-        GetComponent<MeshRenderer>().enabled = false;
+        //GetComponent<MeshRenderer>().enabled = false;
     }
 }
