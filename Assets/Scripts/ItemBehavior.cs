@@ -4,6 +4,14 @@ using UnityEngine;
 using MLAPI;
 using MLAPI.Prototyping;
 
+public enum ItemType
+{
+    Normal,  // x 2
+    Crown, // x 1
+    Utility, // x 3
+    Rare // x 1
+}
+
 public class ItemBehavior : MonoBehaviour
 {
     protected Rigidbody myRigidBody;
@@ -13,6 +21,7 @@ public class ItemBehavior : MonoBehaviour
     NetworkedTransform myNetworkedTransform;
 
     public bool isKinematic = false;
+    public ItemType itemType;
     private bool isActive = false;
 
     public enum HoldingHand
