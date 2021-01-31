@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
+using MLAPI.Messaging;
+using MLAPI.NetworkedVar;
 using MLAPI.Prototyping;
 
 public class CrownItem : ItemBehavior
@@ -16,8 +18,23 @@ public class CrownItem : ItemBehavior
     public override void OnActivate()
     {
         // trigger victory!
+        RequestGameWin(holdingPlayer);
+    }
+
+    public void RequestGameWin(GameObject player)
+    {
+        print("CrownItem.RequestGameWin()");
+        // just grant it! Why the hell not?
+        ulong playerNetID = player.GetComponent<NetworkedObject>().NetworkId;
+        InvokeServerRpc(RequestWinRPC, playerNetID);
+    }
+
+    [ServerRPC]
+    private void RequestWinRPC(ulong playerNetID)
+    {
+        print("CrownItem.RequestWinRPC()");
+        gameManager.winner = GetNetworkedObject(playerNetID).gameObject.GetComponent<FPC>().playerName.Value;
         gameManager.SetGameState(GameState.GameWinner);
-        gameManager.winner = holdingPlayer.GetComponent<FPC>().playerName.Value;
         Debug.Log("winner: " + gameManager.winner);
     }
 }

@@ -63,7 +63,11 @@ public class NetworkMode : MonoBehaviour
         {
             networkMenu.DisableDisplay();
 
-            gameManager.SetGameState(GameState.GameLobby);
+            // clients should not attempt to directly set game state
+            if (NetworkingManager.Singleton.IsHost || NetworkingManager.Singleton.IsServer)
+            {
+                gameManager.SetGameState(GameState.GameLobby);
+            }
         }
         else
         {

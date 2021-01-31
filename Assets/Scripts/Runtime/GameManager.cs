@@ -26,7 +26,7 @@ public class GameManager : NetworkedBehaviour
     /// <summary>
     /// Coundown stuff
     /// </summary>
-    [SyncedVar]
+    [SyncedVar] // SyncedVar only data flow server/host => client
     public float countdownValue;
     [SerializeField]
     float countdownStart = 3f;
@@ -157,6 +157,12 @@ public class GameManager : NetworkedBehaviour
 
     public void SetGameState(GameState newState)
     {
+        if (!IsServer && !IsHost)
+        {
+            print("warning: non-host attempting to directly set game state...");
+            return;
+        }
+
         gameState = newState;
         Debug.Log("switching to new state: " + gameState);
         switch (gameState)
@@ -322,5 +328,22 @@ public class GameManager : NetworkedBehaviour
         }
 
         return itemSpawns;
+    }
+
+    public void RequestGameWin(GameObject player)
+    {
+        print("GameManager.RequestGameWin()");
+        // just grant it! Why the hell not?
+        ulong playerNetID = player.GetComponent<NetworkedObject>().NetworkId;
+        InvokeServerRpc(RequestWinRPC, playerNetID);
+    }
+
+    [ServerRPC]
+    private void RequestWinRPC(ulong playerNetID)
+    {
+        print("GameManager.RequestWinRPC()");
+        winner = GetNetworkedObject(playerNetID).gameObject.GetComponent<FPC>().playerName.Value;
+        SetGameState(GameState.GameWinner);
+        Debug.Log("winner: " + winner);
     }
 }
