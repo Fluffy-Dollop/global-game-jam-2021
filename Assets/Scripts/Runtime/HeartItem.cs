@@ -11,6 +11,7 @@ public class HeartItem : ItemBehavior
         // give player controlling you more health
         holdingPlayer.GetComponent<FPC>().Heal(1.0f);
 
-        // todo: respawn the heart
+        // respawn the heart
+        Respawn();
     }
 }

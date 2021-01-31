@@ -24,6 +24,8 @@ public class ItemBehavior : MonoBehaviour
     public ItemType itemType;
     private bool isActive = false;
 
+    public StartingPlane respawner;
+
     public enum HoldingHand
     {
         None,
@@ -46,11 +48,14 @@ public class ItemBehavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        respawner = GameObject.FindGameObjectWithTag("StartingPlatform").GetComponent<StartingPlane>();
     }
 
     public bool IsHeld() { return holdingPlayer != null; }
     virtual public void PickUp(GameObject player, HoldingHand whichHand)
     {
+        if (IsHeld()) { return; }
+
         holdingPlayer = player;
         holdingHand = whichHand;
         myRigidBody.useGravity = false;
@@ -63,15 +68,19 @@ public class ItemBehavior : MonoBehaviour
 
     virtual public void Drop()
     {
+        if (!IsHeld()) { return; }
+
+        // be sure to deactivate first
+        Activate(false);
+
+        // disconnect from player
         holdingPlayer = null;
         holdingHand = HoldingHand.None;
+
         myRigidBody.useGravity = true;
         myCollider.enabled = true;
         myRigidBody.freezeRotation = false;
         myRigidBody.isKinematic = isKinematic;
-
-        // be sure to deactivate
-        Activate(false);
     }
 
     public bool IsActive() { return isActive; }
@@ -99,5 +108,14 @@ public class ItemBehavior : MonoBehaviour
     public void Unspawn()
     {
         GetComponent<NetworkedObject>().UnSpawn();
+    }
+
+    public void Respawn()
+    {
+        if (holdingPlayer)
+        {
+            holdingPlayer.GetComponent<FPC>().ReleaseHoldOfHand(holdingHand);
+        }
+        respawner.Respawn(gameObject);
     }
 }

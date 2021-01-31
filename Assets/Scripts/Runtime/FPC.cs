@@ -230,7 +230,56 @@ public class FPC : NetworkedBehaviour
         }
     }
 
-    GameObject UpdateHand(GameObject itemInHand, GameObject itemInOtherHand, bool itemTriggered, bool itemReleased, ItemBehavior.HoldingHand whichHand)
+    public void ReleaseHoldOfHand(ItemBehavior.HoldingHand whichHand)
+    {
+        GameObject itemInHand = null;
+
+        switch (whichHand)
+        {
+        case ItemBehavior.HoldingHand.Left:
+            itemInHand = leftHandItem;
+            leftHandItem = null;
+            break;
+        case ItemBehavior.HoldingHand.Right:
+            itemInHand = rightHandItem;
+            rightHandItem = null;
+            break;
+        default:
+            break;
+        }
+
+        if (itemInHand)
+        {
+            // ready to commence drop, Captain
+            itemInHand.GetComponent<ItemBehavior>().Drop();
+
+            // fix up our scene graph
+            itemInHand.transform.parent = transform.parent;
+        }
+    }
+
+    public void TakeHoldOfInHand(ItemBehavior.HoldingHand whichHand, GameObject item)
+    {
+        // pick up this object in this hand
+        RequestOwnership(item);
+        item.transform.parent = transform;
+
+        switch (whichHand)
+        {
+        case ItemBehavior.HoldingHand.Left:
+            leftHandItem = item;
+            break;
+        case ItemBehavior.HoldingHand.Right:
+            rightHandItem = item;
+            break;
+        default:
+            break;
+        }
+
+        item.GetComponent<ItemBehavior>().PickUp(gameObject, whichHand);
+    }
+
+    void UpdateHand(GameObject itemInHand, GameObject itemInOtherHand, bool itemTriggered, bool itemReleased, ItemBehavior.HoldingHand whichHand)
     {
         var pickUpRange = 3.0f;
 
@@ -241,9 +290,7 @@ public class FPC : NetworkedBehaviour
                 if (shouldDropItem)
                 {
                     // drop the item
-                    itemInHand.transform.parent = transform.parent;
-                    itemInHand.GetComponent<ItemBehavior>().Drop();
-                    itemInHand = null;
+                    ReleaseHoldOfHand(whichHand);
                 }
                 else
                 {
@@ -257,15 +304,11 @@ public class FPC : NetworkedBehaviour
                 GameObject found = gameManager.FindClosestItem(transform.position, pickUpRange, itemInOtherHand);
                 if (found)
                 {
-                    // pick up this object in this hand
-                    RequestOwnership(found);
-                    found.transform.parent = transform;
-                    itemInHand = found;
-                    itemInHand.GetComponent<ItemBehavior>().PickUp(gameObject, whichHand);
+                    TakeHoldOfInHand(whichHand, found);
                 }
                 else
                 {
-                    // no object within range
+                    // no object within range (whoosh)
                 }
             }
         }
@@ -273,8 +316,6 @@ public class FPC : NetworkedBehaviour
         {
             itemInHand.GetComponent<ItemBehavior>().Deactivate();
         }
-
-        return itemInHand;
     }
 
     void HandleItems()
@@ -286,8 +327,8 @@ public class FPC : NetworkedBehaviour
         bool rightItemReleased = (prevRightItemUsed > 0.0f) && (RightItemUsed <= 0.0f);
 
        // update left and right items
-        leftHandItem = UpdateHand(leftHandItem, rightHandItem, leftItemTriggered, leftItemReleased, ItemBehavior.HoldingHand.Left);
-        rightHandItem = UpdateHand(rightHandItem, leftHandItem, rightItemTriggered, rightItemReleased, ItemBehavior.HoldingHand.Right);
+        UpdateHand(leftHandItem, rightHandItem, leftItemTriggered, leftItemReleased, ItemBehavior.HoldingHand.Left);
+        UpdateHand(rightHandItem, leftHandItem, rightItemTriggered, rightItemReleased, ItemBehavior.HoldingHand.Right);
 
         // set up for next time
         prevLeftItemUsed = LeftItemUsed;
