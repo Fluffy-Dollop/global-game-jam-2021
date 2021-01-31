@@ -1066,7 +1066,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 50, y: 250}
+  m_AnchoredPosition: {x: 250, y: 250}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &245512676
@@ -1081,7 +1081,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a36f12d05015643947bae4cd75d7f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hand: Right Hand
+  hand: Right
   NameField: {fileID: 1140998713}
   HelpField: {fileID: 214228556}
 --- !u!1 &285076462
@@ -5969,7 +5969,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 250, y: 250}
+  m_AnchoredPosition: {x: 50, y: 250}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1908406278
@@ -5984,7 +5984,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a36f12d05015643947bae4cd75d7f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hand: Left Hand
+  hand: Left
   NameField: {fileID: 1815490287}
   HelpField: {fileID: 653389869}
 --- !u!1 &2019253902

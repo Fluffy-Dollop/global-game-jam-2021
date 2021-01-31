@@ -22,7 +22,7 @@ public class HandDisplay : MonoBehaviour
 
     public void SetText(string itemName, string itemHelp)
     {
-        NameField.text = hand + ": " + itemName;
+        NameField.text = hand + " Click: " + itemName;
         HelpField.text = itemHelp;
     }
 
