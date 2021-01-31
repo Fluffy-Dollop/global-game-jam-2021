@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 5267381794970682973}
   - component: {fileID: -6939518781954634601}
   - component: {fileID: 3462577252649749154}
-  - component: {fileID: 1489837900704048573}
+  - component: {fileID: 5054210083267577872}
   m_Layer: 0
   m_Name: wallSteps
   m_TagString: item
@@ -208,10 +208,10 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 3e2a0b195c5bf094e9529d95d4978189, type: 3}
---- !u!114 &1489837900704048573
+--- !u!114 &5054210083267577872
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -223,5 +223,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0e492499634e75468c435871536096f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isKinematic: 1
-  itemType: 2
+  itemType: 0
+  nonConvex: 0
+  gameManager: {fileID: 0}

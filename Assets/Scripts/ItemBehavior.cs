@@ -19,10 +19,9 @@ public class ItemBehavior : NetworkedBehaviour
     protected GameObject holdingPlayer;
     protected HoldingHand holdingHand = HoldingHand.None;
     NetworkedTransform myNetworkedTransform;
-
-    public bool isKinematic = false;
     public ItemType itemType;
     private bool isActive = false;
+    public bool nonConvex = false;
 
     public GameManager gameManager;
 
@@ -39,8 +38,8 @@ public class ItemBehavior : NetworkedBehaviour
         // setup components
         myCollider = GetComponent<Collider>();
         myRigidBody = gameObject.AddComponent<Rigidbody>();
+        myRigidBody.isKinematic = nonConvex;
         myRigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-        myRigidBody.isKinematic = isKinematic;
         myNetworkedTransform = gameObject.AddComponent<NetworkedTransform>();
         tag = "item";
     }
@@ -64,9 +63,13 @@ public class ItemBehavior : NetworkedBehaviour
         myRigidBody.useGravity = false;
         myCollider.enabled = false;
         myRigidBody.freezeRotation = true;
-        myRigidBody.isKinematic = false;
         myRigidBody.velocity = Vector3.zero;
         myRigidBody.angularVelocity = Vector3.zero;
+
+        if (!nonConvex)
+        {
+            myRigidBody.isKinematic = true;
+        }
 
         OnPickUp();
     }
@@ -87,7 +90,11 @@ public class ItemBehavior : NetworkedBehaviour
         myRigidBody.useGravity = true;
         myCollider.enabled = true;
         myRigidBody.freezeRotation = false;
-        myRigidBody.isKinematic = isKinematic;
+
+        if (!nonConvex)
+        {
+            myRigidBody.isKinematic = false;
+        }
     }
 
     public bool IsActive() { return isActive; }
