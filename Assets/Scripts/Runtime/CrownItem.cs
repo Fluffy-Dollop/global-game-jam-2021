@@ -19,6 +19,15 @@ public class CrownItem : ItemBehavior
     {
         // trigger victory!
         RequestGameWin(holdingPlayer);
+
+        // play victory music
+        GetComponent<AudioSource>().Play();
+    }
+
+    public override void OnDespawn()
+    {
+        // stop victory music
+        GetComponent<AudioSource>().Stop();
     }
 
     public void RequestGameWin(GameObject player)

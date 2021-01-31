@@ -118,40 +118,44 @@ public class GameManager : NetworkedBehaviour
 
         switch (gameState)
         {
-            case (GameState.None):
-                if (IsServer || IsHost)
-                {
-                    countdownValue = countdownStart;
-                }
-                break;
-            case (GameState.GameLobby):
-                // lazily play lobby music
-                if (!audio.isPlaying)
-                {
-                    audio.Play();
-                }
-                break;
-            case (GameState.GameCountdown):
-                // stop the music
-                if (audio.isPlaying)
-                {
-                    audio.Stop();
-                }
-                if (IsServer || IsHost)
-                {
-                    CountDownToGameState(GameState.GamePlay, countdownWinStart, "Counting down to begin game...");
-                }
-                break;
-            case (GameState.GamePlay):
-                Debug.Log("Playing...");
-                break;
-            case (GameState.GameWinner):
-                Debug.Log("Who won?");
-                if (IsServer || IsHost)
-                {
-                    CountDownToGameState(GameState.GameLobby, countdownStart, "Counting down to restart game...");
-                }
-                break;
+        case (GameState.None):
+            if (IsServer || IsHost)
+            {
+                countdownValue = countdownStart;
+            }
+            break;
+        case (GameState.GameLobby):
+            // lazily play lobby music
+            if (!audio.isPlaying)
+            {
+                audio.Play();
+            }
+            break;
+        case (GameState.GameCountdown):
+            if (IsServer || IsHost)
+            {
+                CountDownToGameState(GameState.GamePlay, countdownWinStart, "Counting down to begin game...");
+            }
+            break;
+        case (GameState.GamePlay):
+            Debug.Log("Playing...");
+            break;
+        case (GameState.GameWinner):
+            Debug.Log("Who won?");
+            if (IsServer || IsHost)
+            {
+                CountDownToGameState(GameState.GameLobby, countdownStart, "Counting down to restart game...");
+            }
+            break;
+        }
+
+        if (gameState != GameState.GameLobby)
+        {
+            // stop the music
+            if (audio.isPlaying)
+            {
+                audio.Stop();
+            }
         }
     }
 

@@ -115,6 +115,7 @@ public class ItemBehavior : NetworkedBehaviour
     public void Unspawn()
     {
         GetComponent<NetworkedObject>().UnSpawn();
+        OnDespawn();
     }
 
     public void Respawn()
@@ -123,6 +124,9 @@ public class ItemBehavior : NetworkedBehaviour
         {
             holdingPlayer.GetComponent<FPC>().ReleaseHoldOfHand(holdingHand);
         }
+        OnDespawn();
         gameManager.Respawn(this);
     }
+
+    virtual public void OnDespawn() {} // called for either unspawn or respawn
 }
