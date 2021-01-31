@@ -10,5 +10,11 @@ public enum ItemSpawnType
 
 public class ItemSpawn : MonoBehaviour
 {
-    public ItemSpawnType itemSpawnType;
+    public ItemSpawnType itemSpawnType = ItemSpawnType.Normal;
+    public ItemBehavior item;
+
+    private void Start()
+    {
+        GetComponent<MeshRenderer>().enabled = false;
+    }
 }

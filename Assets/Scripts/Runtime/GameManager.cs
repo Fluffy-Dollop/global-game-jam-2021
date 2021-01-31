@@ -151,13 +151,15 @@ public class GameManager : NetworkedBehaviour
                     break;
                 case (GameState.GameLobby):
                     InvokeClientRpcOnEveryone(ServerMessage, "Game Lobby!");
-                    CleanLobby();
+                    CleanSpawned();
                     StartLobby();
                     break;
                 case (GameState.GameCountdown):
+                    CleanSpawned();
                     InvokeClientRpcOnEveryone(ServerMessage, "Initiating Countdown!");
                     break;
                 case (GameState.GamePlay):
+                    PlaySpawnItems();
                     InvokeClientRpcOnEveryone(ServerMessage, "Let's Play!");
                     break;
                 case (GameState.GameWinner):
@@ -183,16 +185,7 @@ public class GameManager : NetworkedBehaviour
             // spawn various objects
             foreach (var itemPrefab in itemPrefabs)
             {
-                var spawnPosition = new Vector3(
-                    Random.Range(-10.0f, 10.0f),
-                    0.5f,
-                    Random.Range(-10.0f, 10.0f));
-
-                var spawnRotation = Quaternion.Euler(
-                    0.0f,
-                    Random.Range(0, 180),
-                    0.0f);
-                var item = (GameObject)Instantiate(itemPrefab, spawnPosition, spawnRotation);
+                var item = (GameObject)Instantiate(itemPrefab, RandomStartPlanePosition(), RandomRotation());
                 item.GetComponent<NetworkedObject>().Spawn();
                 spawnedItems.Add(item.GetComponent<ItemBehavior>());
             }
@@ -204,7 +197,7 @@ public class GameManager : NetworkedBehaviour
         }
     }
 
-    private void CleanLobby()
+    private void CleanSpawned()
     {
         foreach (ItemBehavior item in spawnedItems)
         {
@@ -213,5 +206,71 @@ public class GameManager : NetworkedBehaviour
             Destroy(item.gameObject);
         }
         spawnedItems = new List<ItemBehavior>();
+    }
+
+    private void PlaySpawnItems()
+    {
+        foreach (var itemPrefab in itemPrefabs)
+        {
+            List<ItemSpawn> spawnList = new List<ItemSpawn>();
+
+            if (itemPrefab.tag == "CrownSpawn")
+            {
+                spawnList = GetAvailableSpawnList("CrownSpawn");
+            }
+            else
+            {
+                spawnList = GetAvailableSpawnList("ItemSpawn");
+            }
+
+            if (spawnList.Count <= 0)
+            {
+                var item = (GameObject)Instantiate(itemPrefab, RandomStartPlanePosition(), RandomRotation());
+                item.GetComponent<NetworkedObject>().Spawn();
+                spawnedItems.Add(item.GetComponent<ItemBehavior>());
+            }
+            else
+            {
+                int index = Random.Range(0, spawnList.Count - 1);
+                ItemSpawn spawn = spawnList[index];
+                spawn.item = itemPrefab.GetComponent<ItemBehavior>();
+                GameObject item = Instantiate(itemPrefab, spawn.transform.position, RandomRotation());
+                item.GetComponent<NetworkedObject>().Spawn();
+                spawnedItems.Add(spawn.item);
+            }
+        }
+    }
+
+    private Vector3 RandomStartPlanePosition()
+    {
+        return new Vector3(
+                    Random.Range(-10.0f, 10.0f),
+                    0.5f,
+                    Random.Range(-10.0f, 10.0f));
+    }
+
+    private Quaternion RandomRotation()
+    {
+        return Quaternion.Euler(
+                    0.0f,
+                    Random.Range(0, 180),
+                    0.0f);
+    }
+
+    private List<ItemSpawn> GetAvailableSpawnList(string searchTag)
+    {
+        List<ItemSpawn> itemSpawns = new List<ItemSpawn>();
+
+        foreach (GameObject itemSpawnObj in GameObject.FindGameObjectsWithTag(searchTag))
+        {
+            ItemSpawn itemSpawn = itemSpawnObj.GetComponent<ItemSpawn>();
+
+            if (itemSpawn.item == null)
+            {
+                itemSpawns.Add(itemSpawn.GetComponent<ItemSpawn>());
+            }
+        }
+
+        return itemSpawns;
     }
 }
