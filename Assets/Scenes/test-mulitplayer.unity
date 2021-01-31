@@ -3716,14 +3716,19 @@ MonoBehaviour:
   - {fileID: 4964156685107365740, guid: 5c01010d03ec9a4438128ec69fdc0e24, type: 3}
   - {fileID: 5282034610036250493, guid: 982d00859051b5b43aedc99a5f3a44fa, type: 3}
   gameState: 0
+  ourPlayerNetID: 0
   countdownValue: 0
   countdownStart: 3
-  countdownWinStart: 5
+  countdownWinStart: 10
   winner: 
+  winnerPlayerNetID: 0
   SpawnNumberCrowns: 1
   SpawnNumberNormal: 2
   SpawnNumberUtility: 2
   SpawnNumberRare: 1
+  audioSource: {fileID: 1410187088}
+  lobbyMusicSoundClip: {fileID: 8300000, guid: 1b9805f9abe78ae499e681f50c1f293f, type: 3}
+  defeatMusicSoundClip: {fileID: 8300000, guid: 7bdd9e13ebde5ab48894dacdc90c6c5d, type: 3}
 --- !u!114 &1410187087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3751,7 +3756,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 1b9805f9abe78ae499e681f50c1f293f, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

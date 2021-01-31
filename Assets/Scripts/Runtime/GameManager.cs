@@ -22,6 +22,7 @@ public class GameManager : NetworkedBehaviour
 
     [SyncedVar]
     public GameState gameState = GameState.None;
+    public ulong ourPlayerNetID;
 
     /// <summary>
     /// Coundown stuff
@@ -31,19 +32,27 @@ public class GameManager : NetworkedBehaviour
     [SerializeField]
     float countdownStart = 3f;
     [SerializeField]
-    float countdownWinStart = 5f;
+    float countdownWinStart = 10f; // overridden by game manager!
 
     [SyncedVar]
     public string winner = "";
+    [SyncedVar]
+    public ulong winnerPlayerNetID;
 
     [SerializeField] int SpawnNumberCrowns = 1;
     [SerializeField] int SpawnNumberNormal = 2;
     [SerializeField] int SpawnNumberUtility = 2; // also once in the utility spot
     [SerializeField] int SpawnNumberRare = 1;
 
+    // music
+    public AudioSource audioSource;
+    public AudioClip lobbyMusicSoundClip;
+    public AudioClip defeatMusicSoundClip;
+
     void Awake()
     {
         countdownValue = countdownStart;
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -112,6 +121,35 @@ public class GameManager : NetworkedBehaviour
         }
     }
 
+    void PlayMusicClip(AudioClip musicClip) // one at a time
+    {
+        if (audioSource.clip != musicClip)
+        {
+            if (audioSource.clip && audioSource.isPlaying)
+            {
+                audioSource.Stop();
+            }
+            audioSource.clip = musicClip;
+        }
+        if (!audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
+    }
+
+    void StopStateMusic(GameState state, AudioClip musicClip)
+    {
+        if (gameState != state && audioSource.clip == musicClip)
+        {
+            if (audioSource.isPlaying)
+            {
+                audioSource.Stop();
+            }
+
+            audioSource.clip = null;
+        }
+    }
+
     void RunGameState()
     {
         var audio = GetComponent<AudioSource>();
@@ -126,10 +164,7 @@ public class GameManager : NetworkedBehaviour
             break;
         case (GameState.GameLobby):
             // lazily play lobby music
-            if (!audio.isPlaying)
-            {
-                audio.Play();
-            }
+            PlayMusicClip(lobbyMusicSoundClip);
             break;
         case (GameState.GameCountdown):
             if (IsServer || IsHost)
@@ -141,6 +176,12 @@ public class GameManager : NetworkedBehaviour
             Debug.Log("Playing...");
             break;
         case (GameState.GameWinner):
+            // if we're a loser, play the music
+            if (winnerPlayerNetID != ourPlayerNetID)
+            {
+                PlayMusicClip(defeatMusicSoundClip);
+            }
+
             Debug.Log("Who won?");
             if (IsServer || IsHost)
             {
@@ -149,14 +190,9 @@ public class GameManager : NetworkedBehaviour
             break;
         }
 
-        if (gameState != GameState.GameLobby)
-        {
-            // stop the music
-            if (audio.isPlaying)
-            {
-                audio.Stop();
-            }
-        }
+        // lazily stop playing lobby or defeat music
+        StopStateMusic(GameState.GameLobby, lobbyMusicSoundClip);
+        StopStateMusic(GameState.GameWinner, defeatMusicSoundClip);
     }
 
     void CountDownToGameState(GameState newGameState, float nextStart, string message)
@@ -348,7 +384,6 @@ public class GameManager : NetworkedBehaviour
 
     public void RequestGameWin(GameObject player)
     {
-        print("GameManager.RequestGameWin()");
         // just grant it! Why the hell not?
         ulong playerNetID = player.GetComponent<NetworkedObject>().NetworkId;
         InvokeServerRpc(RequestWinRPC, playerNetID);
@@ -357,7 +392,8 @@ public class GameManager : NetworkedBehaviour
     [ServerRPC]
     private void RequestWinRPC(ulong playerNetID)
     {
-        print("GameManager.RequestWinRPC()");
+        // retain network ID of winner
+        winnerPlayerNetID = playerNetID;
         winner = GetNetworkedObject(playerNetID).gameObject.GetComponent<FPC>().playerName.Value;
         SetGameState(GameState.GameWinner);
         Debug.Log("winner: " + winner);

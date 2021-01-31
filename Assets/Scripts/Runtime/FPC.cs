@@ -81,6 +81,9 @@ public class FPC : NetworkedBehaviour
             // GetComponentInChildren<AudioListener>().enabled = true;
             playerName.Value = networkMenu.playerName;
 
+            // remember our network ID
+            gameManager.ourPlayerNetID = gameObject.GetComponent<NetworkedObject>().NetworkId;
+
             // find hearts
             hearts[0] = GameObject.Find("Heart1");
             hearts[1] = GameObject.Find("Heart2");
