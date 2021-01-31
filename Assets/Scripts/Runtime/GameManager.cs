@@ -88,24 +88,28 @@ public class GameManager : NetworkedBehaviour
 
     public void NextGameState(FPC player)
     {
-        InvokeClientRpcOnEveryone(SendMessage, player.playerName.Value + " is manually editing state " + Time.deltaTime);
-        switch (gameState)
+
+        if (IsServer || IsHost)
         {
-            case (GameState.None):
-                SetGameState(GameState.GameLobby);
-                break;
-            case (GameState.GameLobby):
-                SetGameState(GameState.GameCountdown);
-                break;
-            case (GameState.GameCountdown):
-                SetGameState(GameState.GamePlay);
-                break;
-            case (GameState.GamePlay):
-                SetGameState(GameState.GameWinner);
-                break;
-            case (GameState.GameWinner):
-                SetGameState(GameState.GameLobby); // does not go back to start menu
-                break;
+            InvokeClientRpcOnEveryone(SendMessage, player.playerName.Value + " is manually editing state " + Time.deltaTime);
+            switch (gameState)
+            {
+                case (GameState.None):
+                    SetGameState(GameState.GameLobby);
+                    break;
+                case (GameState.GameLobby):
+                    SetGameState(GameState.GameCountdown);
+                    break;
+                case (GameState.GameCountdown):
+                    SetGameState(GameState.GamePlay);
+                    break;
+                case (GameState.GamePlay):
+                    SetGameState(GameState.GameWinner);
+                    break;
+                case (GameState.GameWinner):
+                    SetGameState(GameState.GameLobby); // does not go back to start menu
+                    break;
+            }
         }
     }
 
@@ -154,32 +158,29 @@ public class GameManager : NetworkedBehaviour
 
     public void SetGameState(GameState newState)
     {
-        if (IsServer || IsHost)
+        gameState = newState;
+        Debug.Log("switching to new state: " + gameState);
+        switch (gameState)
         {
-            gameState = newState;
-            Debug.Log("switching to new state: " + gameState);
-            switch (gameState)
-            {
-                case (GameState.None):
-                    break;
-                case (GameState.GameLobby):
-                    InvokeClientRpcOnEveryone(ServerMessage, "Game Lobby!");
-                    CleanSpawned();
-                    StartLobby();
-                    break;
-                case (GameState.GameCountdown):
-                    CleanSpawned();
-                    InvokeClientRpcOnEveryone(ServerMessage, "Initiating Countdown!");
-                    break;
-                case (GameState.GamePlay):
-                    PlaySpawnItems();
-                    InvokeClientRpcOnEveryone(ServerMessage, "Let's Play!");
-                    countdownValue = countdownWinStart; // resetting for the win state
-                    break;
-                case (GameState.GameWinner):
-                    InvokeClientRpcOnEveryone(ServerMessage, "WINNER!");
-                    break;
-            }
+            case (GameState.None):
+                break;
+            case (GameState.GameLobby):
+                InvokeClientRpcOnEveryone(ServerMessage, "Game Lobby!");
+                CleanSpawned();
+                StartLobby();
+                break;
+            case (GameState.GameCountdown):
+                CleanSpawned();
+                InvokeClientRpcOnEveryone(ServerMessage, "Initiating Countdown!");
+                break;
+            case (GameState.GamePlay):
+                PlaySpawnItems();
+                InvokeClientRpcOnEveryone(ServerMessage, "Let's Play!");
+                countdownValue = countdownWinStart; // resetting for the win state
+                break;
+            case (GameState.GameWinner):
+                InvokeClientRpcOnEveryone(ServerMessage, "WINNER!");
+                break;
         }
     }
 
