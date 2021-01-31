@@ -15,6 +15,9 @@ public class FPC : NetworkedBehaviour
     [SerializeField] float angularSpeed;
     [SerializeField] TMPro.TMP_Text playerNameTag;
 
+    [SerializeField]
+    Cinemachine.CinemachineFreeLook virtualCamera;
+
     CharacterController Controller;
     NetworkedObject NetObj;
     Vector2 Move;
@@ -54,8 +57,8 @@ public class FPC : NetworkedBehaviour
         if (IsLocalPlayer)
         {
             // playerName.OnValueChanged += NameChange;
-            GetComponentInChildren<Camera>().enabled = true;
-            GetComponentInChildren<AudioListener>().enabled = true;
+            // GetComponentInChildren<Camera>().enabled = true;
+            // GetComponentInChildren<AudioListener>().enabled = true;
             playerName.Value = networkMenu.playerName;
         }
     }
@@ -116,24 +119,35 @@ public class FPC : NetworkedBehaviour
 
         // handle rotation
 
-        currentEulerAngles += new Vector3(-MouseY * rotateSpeed, MouseX * rotateSpeed, 0);
-        currentEulerAngles.x = Mathf.Clamp(currentEulerAngles.x, -90, 90);
-        transform.eulerAngles = currentEulerAngles;
+        // currentEulerAngles += new Vector3(-MouseY * rotateSpeed, MouseX * rotateSpeed, 0);
+        // currentEulerAngles.x = Mathf.Clamp(currentEulerAngles.x, -90, 90);
+        // transform.eulerAngles = currentEulerAngles;
 
         // handle translation (walking)
 
         // convert the angle to radian and compute sine and cosine values once
-        float angDeg = transform.localEulerAngles.y;
-        float angRad = angDeg * Mathf.PI / 180.0f;
-        float cos = Mathf.Cos(angRad);
-        float sin = Mathf.Sin(angRad);
+        // float angDeg = transform.localEulerAngles.y;
+        // float angRad = angDeg * Mathf.PI / 180.0f;
+        // float cos = Mathf.Cos(angRad);
+        // float sin = Mathf.Sin(angRad);
 
         // compute relative forward and right as weighted compositions of absolute forward and right
         // how much to weigh by? Follow the sine/cosine curves as you turn!
-        Vector3 relFwd = Move.y * (cos * Vector3.forward + sin * Vector3.right);
-        Vector3 relRgt = Move.x * (-sin * Vector3.forward + cos * Vector3.right);
-        Vector3 moveDir = (relFwd + relRgt).normalized;
-        Vector3 newMove = (speed * moveDir + Physics.gravity) * deltaTime;
+        // Vector3 relFwd = Move.y * (cos * Vector3.forward + sin * Vector3.right);
+        // Vector3 relRgt = Move.x * (-sin * Vector3.forward + cos * Vector3.right);
+        Vector3 forward = Camera.main.transform.forward;
+        forward.y = 0f;
+        forward *= Move.y;
+        forward.Normalize();
+
+        Vector3 right = Camera.main.transform.right;
+        right.y = 0f;
+        right *= Move.x;
+        right.Normalize();
+
+        Vector3 direction = (forward + right).normalized;
+
+        Vector3 newMove = (speed * direction + Physics.gravity) * deltaTime;
 
         Controller.Move(newMove);
     }
