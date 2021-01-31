@@ -3,11 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using MLAPI;
+using MLAPI.NetworkedVar;
+
+public enum GameState
+{
+    StartMenu,
+    GameCountdown,
+    GamePlay,
+    GameWinner,
+}
 
 public class GameManager : NetworkedBehaviour
 {
     public GameObject[] itemPrefabs;
     public bool lazyInitialized;
+    public NetworkedVar<GameState> gameState = new NetworkedVar<GameState>(GameState.StartMenu);
 
     void Awake()
     {
@@ -68,6 +78,38 @@ public class GameManager : NetworkedBehaviour
                 var item = (GameObject)Instantiate(itemPrefab, spawnPosition, spawnRotation);
                 item.GetComponent<NetworkedObject>().Spawn();
             }
+        }
+    }
+
+    void RunGameState()
+    {
+        switch(gameState.Value)
+        {
+            case (GameState.StartMenu):
+                break;
+            case (GameState.GameCountdown):
+                break;
+            case (GameState.GamePlay):
+                break;
+            case (GameState.GameWinner):
+                break;
+        }
+    }
+
+    public void SetGameState(GameState newState)
+    {
+        gameState.Value = newState;
+        Debug.Log("Switch to new state: " + gameState.Value);
+        switch (gameState.Value)
+        {
+            case (GameState.StartMenu):
+                break;
+            case (GameState.GameCountdown):
+                break;
+            case (GameState.GamePlay):
+                break;
+            case (GameState.GameWinner):
+                break;
         }
     }
 }
