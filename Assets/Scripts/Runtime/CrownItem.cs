@@ -17,7 +17,7 @@ public class CrownItem : ItemBehavior
     {
         // trigger victory!
         gameManager.SetGameState(GameState.GameWinner);
-        gameManager.winner = gameObject.AddComponent<FPC>().playerName.Value;
+        gameManager.winner = holdingPlayer.GetComponent<FPC>().playerName.Value;
         Debug.Log("winner: " + gameManager.winner);
     }
 }
