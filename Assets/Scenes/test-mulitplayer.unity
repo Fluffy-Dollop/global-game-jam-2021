@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: f14e791cab3ea0c4397ab4827d05bebc, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -5896,6 +5896,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1856517885}
   - component: {fileID: 1856517886}
+  - component: {fileID: 1856517887}
   m_Layer: 0
   m_Name: Post Process Volume
   m_TagString: Untagged
@@ -5934,6 +5935,15 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   priority: 0
+--- !u!45 &1856517887
+Skybox:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1856517884}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 2100000, guid: f14e791cab3ea0c4397ab4827d05bebc, type: 2}
 --- !u!1 &1908406276
 GameObject:
   m_ObjectHideFlags: 0
