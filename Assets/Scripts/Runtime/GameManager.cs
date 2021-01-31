@@ -114,7 +114,9 @@ public class GameManager : NetworkedBehaviour
 
     void RunGameState()
     {
-        switch(gameState)
+        var audio = GetComponent<AudioSource>();
+
+        switch (gameState)
         {
             case (GameState.None):
                 if (IsServer || IsHost)
@@ -123,8 +125,18 @@ public class GameManager : NetworkedBehaviour
                 }
                 break;
             case (GameState.GameLobby):
+                // lazily play lobby music
+                if (!audio.isPlaying)
+                {
+                    audio.Play();
+                }
                 break;
             case (GameState.GameCountdown):
+                // stop the music
+                if (audio.isPlaying)
+                {
+                    audio.Stop();
+                }
                 if (IsServer || IsHost)
                 {
                     CountDownToGameState(GameState.GamePlay, countdownWinStart, "Counting down to begin game...");
