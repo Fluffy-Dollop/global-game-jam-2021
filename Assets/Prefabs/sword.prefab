@@ -111,6 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemType: 0
+  displayName: Sword
   help: RIght or Left click to attack!
   nonConvex: 0
   gameManager: {fileID: 0}

@@ -285,6 +285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemType: 2
+  displayName: Torch
   help: Use to light up dark places.
   nonConvex: 0
   gameManager: {fileID: 0}

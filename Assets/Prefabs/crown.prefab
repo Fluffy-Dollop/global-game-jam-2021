@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemType: 1
+  displayName: Crown
   help: Right or Left Click to win the game!
   nonConvex: 0
   gameManager: {fileID: 0}

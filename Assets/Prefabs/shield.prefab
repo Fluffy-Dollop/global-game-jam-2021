@@ -128,6 +128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemType: 0
+  displayName: Shield
   help: Hold right or left click to defend against attacks.
   nonConvex: 0
   gameManager: {fileID: 0}
