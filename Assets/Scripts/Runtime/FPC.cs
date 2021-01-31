@@ -253,4 +253,13 @@ public class FPC : NetworkedBehaviour
         transform.position = newPos;
         Controller.enabled = true;
     }
+
+    public void NextGameState(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            // aliasing from player object, we just want one controller in one spot for now...
+            gameManager.NextGameState();
+        }
+    }
 }

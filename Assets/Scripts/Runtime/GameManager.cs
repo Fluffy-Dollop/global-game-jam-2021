@@ -3,12 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using MLAPI;
+using MLAPI.NetworkedVar;
+using UnityEngine.InputSystem;
+
+public enum GameState
+{
+    None,
+    GameCountdown,
+    GamePlay,
+    GameWinner,
+}
 
 public class GameManager : NetworkedBehaviour
 {
     public GameObject[] itemPrefabs;
     public bool lazyInitialized;
 
+    [SyncedVar]
+    public GameState gameState = GameState.None;
+
+    public float countdownLength = 3.0f;
+    [SyncedVar] private float co
     void Awake()
     {
     }
@@ -16,6 +31,12 @@ public class GameManager : NetworkedBehaviour
     private void Start()
     {
         SceneManager.LoadScene("Scenes/Level1", LoadSceneMode.Additive);
+        countdownCurrent.OnValueChanged += CountDownChanged;
+    }
+
+    public bool ServerAuthorized()
+    {
+        return NetworkingManager.Singleton.IsServer || NetworkingManager.Singleton.IsHost;
     }
 
     public GameObject FindClosestItem(Vector3 position, float range, GameObject exclude)
@@ -68,6 +89,116 @@ public class GameManager : NetworkedBehaviour
                 var item = (GameObject)Instantiate(itemPrefab, spawnPosition, spawnRotation);
                 item.GetComponent<NetworkedObject>().Spawn();
             }
+        }
+
+        if (ServerAuthorized())
+        {
+            Debug.Log("I am Authorized!");
+            RunGameState();
+        }
+    }
+
+
+    public void NextGameState()
+    {
+        switch (gameState)
+        {
+            case (GameState.None):
+                SetGameState(GameState.GameCountdown);
+                break;
+            case (GameState.GameCountdown):
+                SetGameState(GameState.GamePlay);
+                break;
+            case (GameState.GamePlay):
+                SetGameState(GameState.GameWinner);
+                break;
+            case (GameState.GameWinner):
+                SetGameState(GameState.GameCountdown); // does not go back to start menu
+                break;
+        }
+    }
+
+
+    /// <summary>
+    /// Only allowed by server or host, changes values for networked components during play
+    /// </summary>
+    void RunGameState()
+    {
+        switch(gameState.Value)
+        {
+            case (GameState.None):
+                break;
+            case (GameState.GameCountdown):
+                if (countdownCurrent.Value <= 0f)
+                {
+                    SetGameState(GameState.GamePlay);
+                    countdownCurrent.Value = countdownLength;
+                } else
+                {
+                    countdownCurrent.Value -= Time.deltaTime;
+                    Debug.Log("Server triggering new countdown value:" + countdownCurrent.Value);
+                }
+                break;
+            case (GameState.GamePlay):
+                break;
+            case (GameState.GameWinner):
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Only allowed by server or host, changes a game state
+    /// </summary>
+    /// <param name="newState"></param>
+    public void SetGameState(GameState newState)
+    {
+        // only host or server can update game state
+        if (ServerAuthorized())
+        {
+            gameState.Value = newState;
+            switch (gameState.Value)
+            {
+                case (GameState.None):
+                    break;
+                case (GameState.GameCountdown):
+                    countdownCurrent.Value = countdownLength;
+                    break;
+                case (GameState.GamePlay):
+                    break;
+                case (GameState.GameWinner):
+                    break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Listener that triggers when a game state has changed
+    /// </summary>
+    /// <param name="prevGameState"></param>
+    /// <param name="newGameState"></param>
+    public void GetGameStateValueChanged(GameState prevGameState, GameState newGameState)
+    {
+        Debug.Log("Switch from " + prevGameState + " to new state: " + newGameState);
+        switch (newGameState)
+        {
+            case (GameState.None):
+                break;
+            case (GameState.GameCountdown):
+                Debug.Log("Counting Down!");
+                break;
+            case (GameState.GamePlay):
+                Debug.Log("Start!");
+                break;
+            case (GameState.GameWinner):
+                break;
+        }
+    }
+    
+    void CountDownChanged(float prevValue, float newValue)
+    {
+        if (gameState.Value == GameState.GameCountdown)
+        {
+            Debug.Log("Counting down... " + Mathf.Floor(newValue));
         }
     }
 }

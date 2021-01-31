@@ -73,6 +73,14 @@ public class @PlayerController : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""NextGameState"",
+                    ""type"": ""Button"",
+                    ""id"": ""e16c09f4-63f7-423c-99b7-688958335052"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -196,6 +204,17 @@ public class @PlayerController : IInputActionCollection, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1490153c-6562-4b9f-b49e-c0242f7b1c69"",
+                    ""path"": ""<Keyboard>/0"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NextGameState"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -211,6 +230,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
         m_GamePlay_RightItem = m_GamePlay.FindAction("RightItem", throwIfNotFound: true);
         m_GamePlay_DropItem = m_GamePlay.FindAction("DropItem", throwIfNotFound: true);
         m_GamePlay_Jump = m_GamePlay.FindAction("Jump", throwIfNotFound: true);
+        m_GamePlay_NextGameState = m_GamePlay.FindAction("NextGameState", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -267,6 +287,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
     private readonly InputAction m_GamePlay_RightItem;
     private readonly InputAction m_GamePlay_DropItem;
     private readonly InputAction m_GamePlay_Jump;
+    private readonly InputAction m_GamePlay_NextGameState;
     public struct GamePlayActions
     {
         private @PlayerController m_Wrapper;
@@ -278,6 +299,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
         public InputAction @RightItem => m_Wrapper.m_GamePlay_RightItem;
         public InputAction @DropItem => m_Wrapper.m_GamePlay_DropItem;
         public InputAction @Jump => m_Wrapper.m_GamePlay_Jump;
+        public InputAction @NextGameState => m_Wrapper.m_GamePlay_NextGameState;
         public InputActionMap Get() { return m_Wrapper.m_GamePlay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -308,6 +330,9 @@ public class @PlayerController : IInputActionCollection, IDisposable
                 @Jump.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnJump;
+                @NextGameState.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnNextGameState;
+                @NextGameState.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnNextGameState;
+                @NextGameState.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnNextGameState;
             }
             m_Wrapper.m_GamePlayActionsCallbackInterface = instance;
             if (instance != null)
@@ -333,6 +358,9 @@ public class @PlayerController : IInputActionCollection, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @NextGameState.started += instance.OnNextGameState;
+                @NextGameState.performed += instance.OnNextGameState;
+                @NextGameState.canceled += instance.OnNextGameState;
             }
         }
     }
@@ -346,5 +374,6 @@ public class @PlayerController : IInputActionCollection, IDisposable
         void OnRightItem(InputAction.CallbackContext context);
         void OnDropItem(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnNextGameState(InputAction.CallbackContext context);
     }
 }
