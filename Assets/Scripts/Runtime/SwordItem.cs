@@ -6,6 +6,8 @@ using MLAPI.Prototyping;
 
 public class SwordItem : ItemBehavior
 {
+    float knockStrength = 20.0f;
+
     public override void OnActivate()
     {
         myCollider.enabled = true;
@@ -42,12 +44,21 @@ public class SwordItem : ItemBehavior
         myRigidBody.angularVelocity = Vector3.zero;
     }
 
-     void OnCollisionEnter(Collision col)
+     void OnCollisionStay(Collision col)
      {
-        if (col.gameObject.tag == "Player")
+        //if (!IsActive()) { return; }
+
+        var go = col.gameObject;
+        if (go.tag == "Player")
         {
             // a rigidbody tagged as "Player" hit the player
             print("SwordItem.OnCollisionEnter() w/ Player");
+
+            var fpc = go.GetComponent<FPC>();
+            fpc.Hurt(1.0f);
+            fpc.Stun();
+            var knockDir = (fpc.transform.position - gameObject.transform.position).normalized;
+            fpc.KnockBack(knockDir * knockStrength);
         }
      }
 }
