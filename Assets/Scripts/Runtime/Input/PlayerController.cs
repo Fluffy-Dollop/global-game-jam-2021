@@ -89,6 +89,14 @@ public class @PlayerController : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Enter"",
+                    ""type"": ""Button"",
+                    ""id"": ""7439b8de-09f4-49d1-9b28-7e65fc94655c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -234,6 +242,17 @@ public class @PlayerController : IInputActionCollection, IDisposable
                     ""action"": ""Help"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dd526779-6b91-491c-9d5a-98ad02bc5983"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Enter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -251,6 +270,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
         m_GamePlay_Jump = m_GamePlay.FindAction("Jump", throwIfNotFound: true);
         m_GamePlay_NextGameState = m_GamePlay.FindAction("NextGameState", throwIfNotFound: true);
         m_GamePlay_Help = m_GamePlay.FindAction("Help", throwIfNotFound: true);
+        m_GamePlay_Enter = m_GamePlay.FindAction("Enter", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -309,6 +329,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
     private readonly InputAction m_GamePlay_Jump;
     private readonly InputAction m_GamePlay_NextGameState;
     private readonly InputAction m_GamePlay_Help;
+    private readonly InputAction m_GamePlay_Enter;
     public struct GamePlayActions
     {
         private @PlayerController m_Wrapper;
@@ -322,6 +343,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
         public InputAction @Jump => m_Wrapper.m_GamePlay_Jump;
         public InputAction @NextGameState => m_Wrapper.m_GamePlay_NextGameState;
         public InputAction @Help => m_Wrapper.m_GamePlay_Help;
+        public InputAction @Enter => m_Wrapper.m_GamePlay_Enter;
         public InputActionMap Get() { return m_Wrapper.m_GamePlay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -358,6 +380,9 @@ public class @PlayerController : IInputActionCollection, IDisposable
                 @Help.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnHelp;
                 @Help.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnHelp;
                 @Help.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnHelp;
+                @Enter.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnEnter;
+                @Enter.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnEnter;
+                @Enter.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnEnter;
             }
             m_Wrapper.m_GamePlayActionsCallbackInterface = instance;
             if (instance != null)
@@ -389,6 +414,9 @@ public class @PlayerController : IInputActionCollection, IDisposable
                 @Help.started += instance.OnHelp;
                 @Help.performed += instance.OnHelp;
                 @Help.canceled += instance.OnHelp;
+                @Enter.started += instance.OnEnter;
+                @Enter.performed += instance.OnEnter;
+                @Enter.canceled += instance.OnEnter;
             }
         }
     }
@@ -404,5 +432,6 @@ public class @PlayerController : IInputActionCollection, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnNextGameState(InputAction.CallbackContext context);
         void OnHelp(InputAction.CallbackContext context);
+        void OnEnter(InputAction.CallbackContext context);
     }
 }

@@ -54,14 +54,16 @@ public class FPC : NetworkedBehaviour
 
     // on-screen hearts
     GameObject[] hearts = new GameObject[3];
+    float startHealth = 2.0f;
     float maxHealth = 3.0f;
-    float health = 2.0f; // between 0.0f and maxHealth
+    float health; // between 0.0f and maxHealth
 
     void Awake()
     {
         Controller = GetComponent<CharacterController>();
         NetObj = GetComponent<NetworkedObject>();
         audioSource = GetComponent<AudioSource>();
+        health = startHealth;
     }
 
     private void NameChange(string prevName, string newName)
@@ -103,6 +105,8 @@ public class FPC : NetworkedBehaviour
 
     void DrawHealth()
     {
+        if (!IsLocalPlayer) { return; }
+
         float min = 0.25f;
         float heart0 = Mathf.Clamp(health - 0.0f, min, 1.0f);
         float heart1 = Mathf.Clamp(health - 1.0f, min, 1.0f);
@@ -114,10 +118,13 @@ public class FPC : NetworkedBehaviour
 
     public void Heal(float health)
     {
-        this.health = Mathf.Clamp(this.health + health, 0.0f, maxHealth);
+        if (health > 0.0f || !IsStunned())
+        {
+            this.health = Mathf.Clamp(this.health + health, 0.0f, maxHealth);
+        }
         if (this.health <= 0.0f)
         {
-            // todo: die
+            Die();
         }
 
         // update on-screen health display
@@ -126,6 +133,20 @@ public class FPC : NetworkedBehaviour
 
     public void Harm(float health) { Heal(-health); }
     public void Hurt(float health) { Harm(health); }
+
+    float stunTimeout = 0.0f;
+    public void Stun(float seconds = 2.0f)
+    {
+        // become invincible / immobile for given seconds
+        stunTimeout = seconds;
+    }
+    public bool IsStunned() { return stunTimeout >= 0.1f; }
+
+    Vector3 specialForce = Vector3.zero;
+    public void KnockBack(Vector3 force)
+    {
+        specialForce = force;
+    }
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -177,6 +198,12 @@ public class FPC : NetworkedBehaviour
         shouldJump = context.ReadValue<float>() > 0.0f;
     }
 
+    void Die()
+    {
+        startingPlane.Respawn(gameObject);
+        health = startHealth;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -186,7 +213,7 @@ public class FPC : NetworkedBehaviour
             case GameState.GameLobby:
                 if (!startingPlane.IsInside(transform.position))
                 {
-                    startingPlane.Respawn(gameObject);
+                    Die();
                 }
                 break;
         }
@@ -218,6 +245,8 @@ public class FPC : NetworkedBehaviour
     {
         float deltaTime = Time.deltaTime;
 
+        stunTimeout = Mathf.Clamp(stunTimeout - deltaTime, 0.0f, stunTimeout);
+
         // handle rotation
         Vector3 camForward = Camera.main.transform.forward;
         camForward.y = 0f;
@@ -243,13 +272,28 @@ public class FPC : NetworkedBehaviour
         Vector3 relFwd = Move.y * (cos * Vector3.forward + sin * Vector3.right);
         Vector3 relRgt = Move.x * (-sin * Vector3.forward + cos * Vector3.right);
 
-        Vector3 moveDir = (relFwd + relRgt).normalized;
+        bool underControl = !IsStunned();
+        Vector3 moveDir = underControl ? (relFwd + relRgt).normalized : Vector3.zero;
 
         // update velocity
         velY += Physics.gravity.y * deltaTime;
+        var specialForceFriction = 60.0f;
+        specialForce = specialForce.normalized * Mathf.Max(specialForce.magnitude - specialForceFriction * deltaTime, 0);
+
+        /* not working :(
+        // sqish according to special force magnitude
+        var sfm = specialForce.magnitude;
+        var ratio = (specialForceFriction - sfm) / specialForceFriction;
+        ratio = ratio * ratio;
+        print(ratio);
+        transform.localScale = new Vector3(
+            Mathf.Clamp(ratio, 0.1f, 2.0f),
+            Mathf.Clamp(2.0f - ratio, 0.1f, 2.0f),
+            Mathf.Clamp(ratio, 0.1f, 2.0f));
+        //*/
 
         // update position
-        Vector3 newMove = (speed * moveDir + velY * Vector3.up) * deltaTime;
+        Vector3 newMove = (speed * moveDir + velY * Vector3.up + specialForce) * deltaTime;
         Controller.Move(newMove);
 
         if (Controller.isGrounded)
@@ -415,6 +459,17 @@ public class FPC : NetworkedBehaviour
             if (context.performed)
             {
                 // aliasing from player object, we just want one controller in one spot for now...
+                gameManager.NextGameState(this);
+            }
+        }
+    }
+
+    public void StartMatch(InputAction.CallbackContext context)
+    {
+        if ((IsServer || IsHost) && IsLocalPlayer && gameManager.gameState == GameState.GameLobby)
+        {
+            if (context.performed)
+            {
                 gameManager.NextGameState(this);
             }
         }
