@@ -5,10 +5,11 @@ using UnityEngine.SceneManagement;
 using MLAPI;
 using MLAPI.NetworkedVar;
 using UnityEngine.InputSystem;
+using MLAPI.Messaging;
 
 public enum GameState
 {
-    StartMenu,
+    None,
     GameCountdown,
     GamePlay,
     GameWinner,
@@ -20,10 +21,19 @@ public class GameManager : NetworkedBehaviour
     public bool lazyInitialized;
 
     [SyncedVar]
-    public GameState gameState = GameState.StartMenu;
+    public GameState gameState = GameState.None;
+
+    [SyncedVar]
+    float countdownValue;
+    [SerializeField]
+    float countdownStart = 3f;
+
+    [SyncedVar]
+    public string winner = "";
 
     void Awake()
     {
+        countdownValue = countdownStart;
     }
 
     private void Start()
@@ -89,9 +99,10 @@ public class GameManager : NetworkedBehaviour
 
     public void NextGameState()
     {
+        Debug.Log("Manually editing state");
         switch (gameState)
         {
-            case (GameState.StartMenu):
+            case (GameState.None):
                 SetGameState(GameState.GameCountdown);
                 break;
             case (GameState.GameCountdown):
@@ -110,10 +121,21 @@ public class GameManager : NetworkedBehaviour
     {
         switch(gameState)
         {
-            case (GameState.StartMenu):
+            case (GameState.None):
+                countdownValue = countdownStart;
                 break;
             case (GameState.GameCountdown):
-                Debug.Log("Counting down...");
+                if (IsServer || IsHost)
+                {
+                    countdownValue -= Time.deltaTime;
+                    InvokeClientRpcOnEveryone(ServerMessage, "Counting down..." + Mathf.Ceil(countdownValue));
+
+                    if (countdownValue <= 0f)
+                    {
+                        SetGameState(GameState.GamePlay);
+                        countdownValue = countdownStart;
+                    }
+                }
                 break;
             case (GameState.GamePlay):
                 Debug.Log("Playing...");
@@ -126,21 +148,30 @@ public class GameManager : NetworkedBehaviour
 
     public void SetGameState(GameState newState)
     {
-        gameState = newState;
-        Debug.Log("Switch to new state: " + gameState);
-        switch (gameState)
+        if (IsServer || IsHost)
         {
-            case (GameState.StartMenu):
-                break;
-            case (GameState.GameCountdown):
-                Debug.Log("Countdown!");
-                break;
-            case (GameState.GamePlay):
-                Debug.Log("Play!");
-                break;
-            case (GameState.GameWinner):
-                Debug.Log("WINNER!");
-                break;
+            gameState = newState;
+            Debug.Log("Switch to new state: " + gameState);
+            switch (gameState)
+            {
+                case (GameState.None):
+                    break;
+                case (GameState.GameCountdown):
+                    InvokeClientRpcOnEveryone(ServerMessage, "Initiating Countdown!");
+                    break;
+                case (GameState.GamePlay):
+                    InvokeClientRpcOnEveryone(ServerMessage, "Initiating Play!");
+                    break;
+                case (GameState.GameWinner):
+                    InvokeClientRpcOnEveryone(ServerMessage, "Initiating WINNER!");
+                    break;
+            }
         }
+    }
+
+    [ClientRPC]
+    private void ServerMessage(string message)
+    {
+        Debug.Log(message);
     }
 }

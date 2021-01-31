@@ -12,6 +12,7 @@ public class NetworkMode : MonoBehaviour
     public NetworkMenu networkMenu;
     public TMPro.TMP_InputField serverIPInput;
     public Quaternion rotationToSpawnWith = Quaternion.Euler(0f,0f,0f);
+    GameManager gameManager;
 
     public GameObject[] menuObjects;
 
@@ -20,6 +21,7 @@ public class NetworkMode : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         UnetTransport = GetComponent<MLAPI.Transports.UNET.UnetTransport>();
         CheckToRunServer();
     }
@@ -60,6 +62,8 @@ public class NetworkMode : MonoBehaviour
         if (NetworkingManager.Singleton.IsHost || NetworkingManager.Singleton.IsClient || NetworkingManager.Singleton.IsServer)
         {
             networkMenu.DisableDisplay();
+
+            gameManager.SetGameState(GameState.GameCountdown);
         }
         else
         {
