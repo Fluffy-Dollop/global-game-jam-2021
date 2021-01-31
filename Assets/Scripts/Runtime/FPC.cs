@@ -136,8 +136,6 @@ public class FPC : NetworkedBehaviour
         float deltaTime = Time.deltaTime;
 
         // handle rotation
-        Debug.Log(MouseX);
-
         Vector3 camForward = Camera.main.transform.forward;
         camForward.y = 0f;
         camForward.Normalize();
