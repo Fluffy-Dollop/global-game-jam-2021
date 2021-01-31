@@ -122,7 +122,7 @@ public class GameManager : NetworkedBehaviour
         }
     }
 
-    void PlayMusicClip(AudioClip musicClip) // one at a time
+    void PlayMusicClip(AudioClip musicClip, float volume = 1.0f) // one at a time
     {
         if (audioSource.clip != musicClip)
         {
@@ -134,6 +134,7 @@ public class GameManager : NetworkedBehaviour
         }
         if (!audioSource.isPlaying)
         {
+            audioSource.volume = volume;
             audioSource.Play();
         }
     }
@@ -165,7 +166,7 @@ public class GameManager : NetworkedBehaviour
             break;
         case (GameState.GameLobby):
             // lazily play lobby music
-            PlayMusicClip(lobbyMusicSoundClip);
+            PlayMusicClip(lobbyMusicSoundClip, 0.5f);
             break;
         case (GameState.GameCountdown):
             if (IsServer || IsHost)
