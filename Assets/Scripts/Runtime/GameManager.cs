@@ -16,7 +16,6 @@ public enum GameState
     GameWinner,
 }
 
-
 public class GameManager : NetworkedBehaviour
 {
     public GameObject[] itemPrefabs;
@@ -34,6 +33,12 @@ public class GameManager : NetworkedBehaviour
 
     [SyncedVar]
     public string winner = "";
+
+    [SerializeField] int SpawnNumberCrowns = 1;
+    [SerializeField] int SpawnNumberNormal = 2;
+    [SerializeField] int SpawnNumberUtility = 2; // also once in the utility spot
+    [SerializeField] int SpawnNumberRare = 1;
+
 
     List<ItemBehavior> spawnedItems = new List<ItemBehavior>();
 
@@ -213,16 +218,32 @@ public class GameManager : NetworkedBehaviour
         foreach (var itemPrefab in itemPrefabs)
         {
             List<ItemSpawn> spawnList = new List<ItemSpawn>();
+            ItemBehavior itemBehavior = itemPrefab.GetComponent<ItemBehavior>();
 
-            if (itemPrefab.tag == "CrownSpawn")
-            {
-                spawnList = GetAvailableSpawnList("CrownSpawn");
-            }
-            else
-            {
-                spawnList = GetAvailableSpawnList("ItemSpawn");
-            }
 
+            switch (itemBehavior.itemType)
+            {
+                case ItemType.Crown:
+                    AssignSpawn(GetAvailableSpawnList("CrownSpawn"), SpawnNumberCrowns, itemPrefab);
+                    break;
+                case ItemType.Utility:
+                    AssignSpawn(GetAvailableSpawnList("UtilitySpawn"), 1, itemPrefab);
+                    AssignSpawn(GetAvailableSpawnList("ItemSpawn"), SpawnNumberUtility, itemPrefab);
+                    break;
+                case ItemType.Rare:
+                    AssignSpawn(GetAvailableSpawnList("ItemSpawn"), SpawnNumberRare, itemPrefab);
+                    break;
+                case ItemType.Normal:
+                    AssignSpawn(GetAvailableSpawnList("ItemSpawn"), SpawnNumberNormal, itemPrefab);
+                    break;
+            }
+        }
+    }
+
+    public void AssignSpawn(List<ItemSpawn> spawnList, int count, GameObject itemPrefab)
+    {
+        for (var i = 0; i < count; i++)
+        {
             if (spawnList.Count <= 0)
             {
                 var item = (GameObject)Instantiate(itemPrefab, RandomStartPlanePosition(), RandomRotation());
@@ -257,7 +278,7 @@ public class GameManager : NetworkedBehaviour
                     0.0f);
     }
 
-    private List<ItemSpawn> GetAvailableSpawnList(string searchTag)
+    public List<ItemSpawn> GetAvailableSpawnList(string searchTag)
     {
         List<ItemSpawn> itemSpawns = new List<ItemSpawn>();
 

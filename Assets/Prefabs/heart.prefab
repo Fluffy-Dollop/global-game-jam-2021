@@ -126,3 +126,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0e492499634e75468c435871536096f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isKinematic: 0
+  itemType: 0
