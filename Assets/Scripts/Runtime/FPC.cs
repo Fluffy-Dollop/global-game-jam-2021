@@ -41,6 +41,9 @@ public class FPC : NetworkedBehaviour
     float velY = 0.0f;
     float jumpForce = 5.0f;
 
+    // sound effects
+    public AudioSource jumpSound;
+
     // networked vars
     public NetworkedVar<string> playerName = new NetworkedVar<string>(new NetworkedVarSettings { WritePermission = NetworkedVarPermission.OwnerOnly }, "[Unnamed]");
 
@@ -186,6 +189,10 @@ public class FPC : NetworkedBehaviour
             if (shouldJump && Controller.isGrounded)
             {
                 velY = jumpForce;
+                if (jumpSound)
+                {
+                    jumpSound.Play();
+                }
             }
         }
 
