@@ -3722,6 +3722,7 @@ MonoBehaviour:
   countdownWinStart: 10
   winner: 
   winnerPlayerNetID: 0
+  disableCrownInLobby: 0
   SpawnNumberCrowns: 1
   SpawnNumberNormal: 2
   SpawnNumberUtility: 2
