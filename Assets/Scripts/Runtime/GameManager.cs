@@ -49,6 +49,9 @@ public class GameManager : NetworkedBehaviour
     private void Start()
     {
         SceneManager.LoadScene("Scenes/Level1", LoadSceneMode.Additive);
+
+        // experimental -- lock cursor mode (helps prevent accidental editor interaction)
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     public GameObject FindClosestItem(Vector3 position, float range, GameObject exclude)

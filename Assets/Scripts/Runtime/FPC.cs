@@ -22,7 +22,7 @@ public class FPC : NetworkedBehaviour
     Vector2 Move;
     float MouseX;
     float MouseY;
-    public float rotateSpeed = 1.0F;
+    public float rotateSpeed = 1.0F; // overridden in player prefab!
     Vector3 currentEulerAngles;
     HelpDisplay helpMenu;
 
