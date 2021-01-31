@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemType: 0
+  displayName: Heart
   help: Right or Left Click to gain a heart!
   nonConvex: 0
   gameManager: {fileID: 0}

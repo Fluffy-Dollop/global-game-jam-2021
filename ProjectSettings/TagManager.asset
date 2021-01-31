@@ -11,6 +11,8 @@ TagManager:
   - CrownSpawn
   - LobbyWall
   - UtilitySpawn
+  - LeftHandDisplay
+  - RightHandDisplay
   layers:
   - Default
   - TransparentFX

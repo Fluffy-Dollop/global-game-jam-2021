@@ -36,6 +36,8 @@ public class FPC : NetworkedBehaviour
     NetworkMenu networkMenu;
     GameObject leftHandItem, rightHandItem;
     StartingPlane startingPlane;
+    HandDisplay rightHandDisplay;
+    HandDisplay leftHandDisplay;
 
     // for jumping/falling
     float velY = 0.0f;
@@ -73,6 +75,8 @@ public class FPC : NetworkedBehaviour
         networkMenu = GameObject.Find("NetworkMenu").GetComponent<NetworkMenu>();
         helpMenu = GameObject.Find("HelpMenu").GetComponent<HelpDisplay>();
         startingPlane = GameObject.FindGameObjectWithTag("StartingPlatform").GetComponent<StartingPlane>();
+        rightHandDisplay = GameObject.FindGameObjectWithTag("RightHandDisplay").GetComponent<HandDisplay>();
+        leftHandDisplay = GameObject.FindGameObjectWithTag("LeftHandDisplay").GetComponent<HandDisplay>();
 
         if (IsLocalPlayer)
         {
@@ -210,6 +214,7 @@ public class FPC : NetworkedBehaviour
         {
             DoMovement();
             HandleItems();
+            UpdateHandDisplay();
 
             // note: Controller.isGrounded may be true ONLY after Controller.Move() is called!
             if (shouldJump && Controller.isGrounded)
@@ -448,6 +453,27 @@ public class FPC : NetworkedBehaviour
                 // aliasing from player object, we just want one controller in one spot for now...
                 gameManager.NextGameState(this);
             }
+        }
+    }
+
+    void UpdateHandDisplay()
+    {
+        if (rightHandItem != null)
+        {
+            ItemBehavior item = rightHandItem.GetComponent<ItemBehavior>();
+            rightHandDisplay.SetText(item.displayName, item.help);
+        } else
+        {
+            rightHandDisplay.ResetText();
+        }
+
+        if (leftHandItem != null)
+        {
+            ItemBehavior item = leftHandItem.GetComponent<ItemBehavior>();
+            leftHandDisplay.SetText(item.displayName, item.help);
+        } else
+        {
+            leftHandDisplay.ResetText();
         }
     }
 }
