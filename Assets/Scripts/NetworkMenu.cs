@@ -8,6 +8,8 @@ public class NetworkMenu : MonoBehaviour
     public string serverIP = "";
     public TMPro.TMP_InputField PlayerNameField;
     public string playerName = "";
+    public TMPro.TMP_InputField RelayIPField;
+    public string relayIP = "";
 
     private void Start()
     {
@@ -15,6 +17,7 @@ public class NetworkMenu : MonoBehaviour
         if (netData != null) {
             ServerIPField.text = netData.serverIP;
             PlayerNameField.text = netData.playerName;
+            RelayIPField.text = netData.relayIP;
         }
     }
 
@@ -22,6 +25,7 @@ public class NetworkMenu : MonoBehaviour
     {
         serverIP = ServerIPField.text;
         playerName = PlayerNameField.text;
+        relayIP = RelayIPField.text;
         SaveLoadNetwork.SaveData(this);
     }
 
@@ -41,11 +45,13 @@ public class NetworkData
 {
     public string serverIP;
     public string playerName;
+    public string relayIP;
 
     public NetworkData(NetworkMenu networkMenu)
     {
         serverIP = networkMenu.serverIP;
         playerName = networkMenu.playerName;
+        relayIP = networkMenu.relayIP;
     }
 }
 
