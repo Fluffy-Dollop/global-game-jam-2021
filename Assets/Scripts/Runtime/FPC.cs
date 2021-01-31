@@ -354,13 +354,6 @@ public class FPC : NetworkedBehaviour
         prevRightItemUsed = RightItemUsed;
     }
 
-    public void RequestOwnership(GameObject item)
-    {
-        ulong itemNetID = item.GetComponent<NetworkedObject>().NetworkId;
-        ulong ourClientID = GetComponent<NetworkedObject>().OwnerClientId;
-        InvokeServerRpc(RequestOwnershipRPC, ourClientID, itemNetID);
-    }
-
     [ServerRPC] // to be used in a co-routine this has to return something, even if ignored
     private bool RequestOwnershipRPC(ulong clientID, ulong itemNetID)
     {

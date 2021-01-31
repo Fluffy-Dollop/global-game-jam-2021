@@ -41,4 +41,13 @@ public class SwordItem : ItemBehavior
         myRigidBody.velocity = Vector3.zero;
         myRigidBody.angularVelocity = Vector3.zero;
     }
+
+     void OnCollisionEnter(Collision col)
+     {
+        if (col.gameObject.tag == "Player")
+        {
+            // a rigidbody tagged as "Player" hit the player
+            print("SwordItem.OnCollisionEnter() w/ Player");
+        }
+     }
 }
