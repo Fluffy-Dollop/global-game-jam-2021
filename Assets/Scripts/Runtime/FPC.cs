@@ -387,11 +387,17 @@ public class FPC : NetworkedBehaviour
     }
 
     // warp is a function so that we can set a warp point and late update it, thanks to the character controller that doesn't gaf
-    public void Warp(Vector3 newPos)
+    public void Warp(Vector3 newPos, bool drop = false)
     {
+        if (drop)
+        {
+            ReleaseHoldOfHand(ItemBehavior.HoldingHand.Left);
+            ReleaseHoldOfHand(ItemBehavior.HoldingHand.Right);
+        }
         Controller.enabled = false;
         transform.position = newPos;
         Controller.enabled = true;
+
     }
 
     public void NextGameState(InputAction.CallbackContext context)
