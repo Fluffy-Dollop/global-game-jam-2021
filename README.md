@@ -7,3 +7,10 @@ A place for team fluffy-dollop to make a beautiful mess together remotely.
 * Dan McCue
 * Zach Pallin
 * Jacob Tabares
+
+
+Attributions:
+Tim Beek: Music for the Viking attire
+Bavarian Goat
+Puzzle Polka
+Support Email: info@timbeek.com 
