@@ -39,9 +39,6 @@ public class GameManager : NetworkedBehaviour
     [SerializeField] int SpawnNumberUtility = 2; // also once in the utility spot
     [SerializeField] int SpawnNumberRare = 1;
 
-
-    List<ItemBehavior> spawnedItems = new List<ItemBehavior>();
-
     void Awake()
     {
         countdownValue = countdownStart;
@@ -192,25 +189,22 @@ public class GameManager : NetworkedBehaviour
             {
                 var item = (GameObject)Instantiate(itemPrefab, RandomStartPlanePosition(), RandomRotation());
                 item.GetComponent<NetworkedObject>().Spawn();
-                spawnedItems.Add(item.GetComponent<ItemBehavior>());
-            }
-
-            foreach (var item in spawnedItems)
-            {
-                Debug.Log(item.name);
             }
         }
     }
 
     private void CleanSpawned()
     {
-        foreach (ItemBehavior item in spawnedItems)
+        foreach (GameObject item in GameObject.FindGameObjectsWithTag("item"))
         {
             Debug.Log("Unspawning: " + item.name);
-            item.Unspawn();
+            NetworkedObject no = item.GetComponent<NetworkedObject>();
+            if (no.IsSpawned)
+            {
+                no.UnSpawn();
+            }
             Destroy(item.gameObject);
         }
-        spawnedItems = new List<ItemBehavior>();
     }
 
     private void PlaySpawnItems()
@@ -247,7 +241,6 @@ public class GameManager : NetworkedBehaviour
             {
                 var item = (GameObject)Instantiate(itemPrefab, RandomStartPlanePosition(), RandomRotation());
                 item.GetComponent<NetworkedObject>().Spawn();
-                spawnedItems.Add(item.GetComponent<ItemBehavior>());
             }
             else
             {
@@ -256,7 +249,6 @@ public class GameManager : NetworkedBehaviour
                 spawn.item = itemPrefab.GetComponent<ItemBehavior>();
                 GameObject item = Instantiate(itemPrefab, spawn.transform.position, RandomRotation());
                 item.GetComponent<NetworkedObject>().Spawn();
-                spawnedItems.Add(spawn.item);
             }
         }
     }
