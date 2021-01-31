@@ -54,14 +54,16 @@ public class FPC : NetworkedBehaviour
 
     // on-screen hearts
     GameObject[] hearts = new GameObject[3];
+    float startHealth = 2.0f;
     float maxHealth = 3.0f;
-    float health = 2.0f; // between 0.0f and maxHealth
+    float health; // between 0.0f and maxHealth
 
     void Awake()
     {
         Controller = GetComponent<CharacterController>();
         NetObj = GetComponent<NetworkedObject>();
         audioSource = GetComponent<AudioSource>();
+        health = startHealth;
     }
 
     private void NameChange(string prevName, string newName)
@@ -122,7 +124,7 @@ public class FPC : NetworkedBehaviour
         }
         if (this.health <= 0.0f)
         {
-            // todo: die
+            Die();
         }
 
         // update on-screen health display
@@ -196,6 +198,12 @@ public class FPC : NetworkedBehaviour
         shouldJump = context.ReadValue<float>() > 0.0f;
     }
 
+    void Die()
+    {
+        startingPlane.Respawn(gameObject);
+        health = startHealth;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -205,7 +213,7 @@ public class FPC : NetworkedBehaviour
             case GameState.GameLobby:
                 if (!startingPlane.IsInside(transform.position))
                 {
-                    startingPlane.Respawn(gameObject);
+                    Die();
                 }
                 break;
         }
