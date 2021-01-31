@@ -110,7 +110,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffd28ae6b6d0ee147ab9954f12f28180, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isKinematic: 0
+  itemType: 0
+  help: RIght or Left click to attack!
+  nonConvex: 0
+  gameManager: {fileID: 0}
 --- !u!114 &5838824156939375709
 MonoBehaviour:
   m_ObjectHideFlags: 0

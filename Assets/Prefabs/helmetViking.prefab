@@ -127,8 +127,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ac614bff068e0349a57d564d4019b4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isKinematic: 0
   itemType: 0
+  help: Makes you run faster!
+  nonConvex: 0
   gameManager: {fileID: 0}
   audioSource: {fileID: 8799859245806364977}
 --- !u!82 &8799859245806364977

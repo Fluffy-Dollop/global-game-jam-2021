@@ -126,5 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696235ab99e3db3469befc07e0a1bc02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isKinematic: 0
   itemType: 0
+  help: Right or Left Click to gain a heart!
+  nonConvex: 0
+  gameManager: {fileID: 0}

@@ -97,8 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 061a9f6f899a4e74cb33fcd9966563f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isKinematic: 0
   itemType: 1
+  help: Right or Left Click to win the game!
+  nonConvex: 0
   gameManager: {fileID: 0}
 --- !u!65 &5022173359449996540
 BoxCollider:

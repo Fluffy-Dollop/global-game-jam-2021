@@ -224,5 +224,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemType: 0
+  help: Drop around the map to reach higher heights.
   nonConvex: 0
   gameManager: {fileID: 0}
