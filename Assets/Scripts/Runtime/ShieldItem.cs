@@ -20,6 +20,8 @@ public class ShieldItem : ItemBehavior
     // called once per frame
     void Update()
     {
+        if (!IsHeld()) { return; }
+
         // position shield out in front of the user & freeze it
         if (IsActive())
         {
@@ -33,11 +35,8 @@ public class ShieldItem : ItemBehavior
             transform.localEulerAngles = new Vector3(0, -135, 0);
         }
 
-        if (IsHeld())
-        {
-            // freeze it!
-            myRigidBody.velocity = Vector3.zero;
-            myRigidBody.angularVelocity = Vector3.zero;
-        }
+        // freeze it!
+        myRigidBody.velocity = Vector3.zero;
+        myRigidBody.angularVelocity = Vector3.zero;
     }
 }
