@@ -46,10 +46,13 @@ public class ItemBehavior : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         respawner = GameObject.FindGameObjectWithTag("StartingPlatform").GetComponent<StartingPlane>();
     }
+
+    virtual public void OnPickUp() {}
+    virtual public void OnDrop() {}
 
     public bool IsHeld() { return holdingPlayer != null; }
     virtual public void PickUp(GameObject player, HoldingHand whichHand)
@@ -64,6 +67,8 @@ public class ItemBehavior : MonoBehaviour
         myRigidBody.isKinematic = false;
         myRigidBody.velocity = Vector3.zero;
         myRigidBody.angularVelocity = Vector3.zero;
+
+        OnPickUp();
     }
 
     virtual public void Drop()
@@ -72,6 +77,8 @@ public class ItemBehavior : MonoBehaviour
 
         // be sure to deactivate first
         Activate(false);
+
+        OnDrop();
 
         // disconnect from player
         holdingPlayer = null;

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7060260650767389648}
   - component: {fileID: 1163189477497411803}
   - component: {fileID: -2922742503257465793}
-  - component: {fileID: 5840688788896800256}
+  - component: {fileID: -5503285073075273614}
   m_Layer: 0
   m_Name: helmetViking
   m_TagString: item
@@ -114,7 +114,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.7954301
   m_Center: {x: 0.01667799, y: 0.57197416, z: 0}
---- !u!114 &5840688788896800256
+--- !u!114 &-5503285073075273614
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,8 +123,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7038086412114120510}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0e492499634e75468c435871536096f, type: 3}
+  m_Script: {fileID: 11500000, guid: 4ac614bff068e0349a57d564d4019b4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isKinematic: 0
-  itemType: 3
+  itemType: 0
+  respawner: {fileID: 0}

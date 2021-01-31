@@ -149,7 +149,7 @@ public class GameManager : NetworkedBehaviour
         if (IsServer || IsHost)
         {
             gameState = newState;
-            Debug.Log( "switching to new state: " + gameState);
+            Debug.Log("switching to new state: " + gameState);
             switch (gameState)
             {
                 case (GameState.None):
@@ -219,7 +219,6 @@ public class GameManager : NetworkedBehaviour
         {
             List<ItemSpawn> spawnList = new List<ItemSpawn>();
             ItemBehavior itemBehavior = itemPrefab.GetComponent<ItemBehavior>();
-
 
             switch (itemBehavior.itemType)
             {

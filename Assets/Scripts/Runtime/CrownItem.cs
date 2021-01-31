@@ -10,6 +10,7 @@ public class CrownItem : ItemBehavior
 
     void Start()
     {
+        base.Start();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 

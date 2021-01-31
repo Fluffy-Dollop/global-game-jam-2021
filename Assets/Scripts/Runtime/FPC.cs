@@ -12,7 +12,7 @@ using TMPro;
 // Fird Person Controller
 public class FPC : NetworkedBehaviour
 {
-    [SerializeField] float speed = 10f;
+    [SerializeField] public float speed = 10f;
     [SerializeField] float angularSpeed;
     [SerializeField] TMPro.TMP_Text playerNameTag;
 
