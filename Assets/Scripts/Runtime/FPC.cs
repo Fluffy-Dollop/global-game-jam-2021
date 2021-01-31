@@ -34,13 +34,14 @@ public class FPC : NetworkedBehaviour
     GameManager gameManager;
     NetworkMenu networkMenu;
     GameObject leftHandItem, rightHandItem;
+    StartingPlane startingPlane;
 
     // for jumping/falling
     float velY = 0.0f;
     float jumpForce = 5.0f;
 
     // networked vars
-    private NetworkedVar<string> playerName = new NetworkedVar<string>(new NetworkedVarSettings { WritePermission = NetworkedVarPermission.OwnerOnly }, "[Unnamed]");
+    public NetworkedVar<string> playerName = new NetworkedVar<string>(new NetworkedVarSettings { WritePermission = NetworkedVarPermission.OwnerOnly }, "[Unnamed]");
 
     void Awake()
     {
@@ -55,8 +56,9 @@ public class FPC : NetworkedBehaviour
 
     private void Start()
     {
-        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         networkMenu = GameObject.Find("NetworkMenu").GetComponent<NetworkMenu>();
+        startingPlane = GameObject.FindGameObjectWithTag("StartingPlatform").GetComponent<StartingPlane>();
 
         if (IsLocalPlayer)
         {
@@ -65,7 +67,7 @@ public class FPC : NetworkedBehaviour
             // GetComponentInChildren<AudioListener>().enabled = true;
             playerName.Value = networkMenu.playerName;
         }
-        else
+        else if (myCamera && myCamera.gameObject)
         {
             myCamera.gameObject.SetActive(false);
         }
@@ -116,6 +118,17 @@ public class FPC : NetworkedBehaviour
     // Update is called once per frame
     void Update()
     {
+        switch(gameManager.gameState)
+        {
+            case GameState.GameCountdown:
+            case GameState.GameLobby:
+                if (!startingPlane.IsInside(transform.position))
+                {
+                    startingPlane.Respawn(gameObject);
+                }
+                break;
+        }
+
         if (IsLocalPlayer)
         {
             DoMovement();
@@ -128,7 +141,10 @@ public class FPC : NetworkedBehaviour
             }
         }
 
-        playerNameTag.text = playerName.Value;
+        if (playerNameTag != null && playerName != null)
+        {
+            playerNameTag.text = playerName.Value;
+        }
     }
 
     void DoMovement()
@@ -262,10 +278,13 @@ public class FPC : NetworkedBehaviour
 
     public void NextGameState(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if ((IsServer || IsHost) && IsLocalPlayer)
         {
-            // aliasing from player object, we just want one controller in one spot for now...
-            gameManager.NextGameState();
+            if (context.performed)
+            {
+                // aliasing from player object, we just want one controller in one spot for now...
+                gameManager.NextGameState(this);
+            }
         }
     }
 }
