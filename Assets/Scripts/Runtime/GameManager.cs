@@ -36,6 +36,7 @@ public class GameManager : NetworkedBehaviour
     [SyncedVar]
     public string winner = "";
 
+    [SerializeField] bool disableCrownInLobby = false;
     [SerializeField] int SpawnNumberCrowns = 1;
     [SerializeField] int SpawnNumberNormal = 2;
     [SerializeField] int SpawnNumberUtility = 2; // also once in the utility spot
@@ -221,6 +222,10 @@ public class GameManager : NetworkedBehaviour
             // spawn various objects
             foreach (var itemPrefab in itemPrefabs)
             {
+                if (disableCrownInLobby && itemPrefab.GetComponent<ItemBehavior>().itemType == ItemType.Crown)
+                {
+                    continue;
+                }
                 var item = (GameObject)Instantiate(itemPrefab, RandomStartPlanePosition(), RandomRotation());
                 item.GetComponent<NetworkedObject>().Spawn();
             }

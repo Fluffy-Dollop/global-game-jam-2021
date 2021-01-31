@@ -3720,6 +3720,7 @@ MonoBehaviour:
   countdownStart: 3
   countdownWinStart: 5
   winner: 
+  disableCrownInLobby: 0
   SpawnNumberCrowns: 1
   SpawnNumberNormal: 2
   SpawnNumberUtility: 2
