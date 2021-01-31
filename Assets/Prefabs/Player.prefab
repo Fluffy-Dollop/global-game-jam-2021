@@ -372,10 +372,6 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: e9e4cc24-157b-441c-8cd5-08b4084f9a53
     m_ActionName: GamePlay/DropItem[/Keyboard/q]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 8063aeb0-f85a-41da-926f-e406178c4a3c
-    m_ActionName: GamePlay/TestX[/Keyboard/d]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: GamePlay
@@ -815,8 +811,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5057583297754475521}
-  m_LocalRotation: {x: 0.07372308, y: -0.000000012049733, z: 8.907672e-10, w: 0.9972788}
-  m_LocalPosition: {x: 0, y: 0, z: -0.00000076293946}
+  m_LocalRotation: {x: 0.07372309, y: 0.000000017878206, z: -0.0000000013216331, w: 0.99727875}
+  m_LocalPosition: {x: 0, y: 0, z: -0.0000011444092}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6721527730744028074}
@@ -1110,8 +1106,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7712581668747342462}
-  m_LocalRotation: {x: 0.109900534, y: -0.000000006015709, z: 6.651589e-10, w: 0.9939426}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.10990053, y: 0.0000000042755386, z: -4.727476e-10, w: 0.9939426}
+  m_LocalPosition: {x: 0, y: 0, z: -0.00000076293946}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7512392453497105554}
@@ -1436,8 +1432,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8966006510854751223}
-  m_LocalRotation: {x: 0.091803044, y: -0.0000000029180864, z: 2.6902525e-10, w: 0.9957772}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.091803044, y: 0.0000000042834305, z: -3.9489953e-10, w: 0.9957772}
+  m_LocalPosition: {x: 0, y: 0, z: -0.00000076293946}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7355723341352872465}
