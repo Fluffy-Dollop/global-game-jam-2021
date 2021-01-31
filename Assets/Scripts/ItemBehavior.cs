@@ -46,7 +46,7 @@ public class ItemBehavior : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    protected void Start()
+    protected virtual void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }

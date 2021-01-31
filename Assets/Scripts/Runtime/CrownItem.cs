@@ -6,14 +6,6 @@ using MLAPI.Prototyping;
 
 public class CrownItem : ItemBehavior
 {
-    GameManager gameManager;
-
-    void Start()
-    {
-        base.Start();
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-    }
-
     public override void OnPickUp()
     {
         // put it on our head
